@@ -200,11 +200,15 @@ export default function App() {
 
     let totalHoras = 0;
     let horasCompletadas = 0;
+    let cantidadCompletadas = 0;
 
     delRango.forEach((act) => {
       const h = horasActividad(act, jornada);
       totalHoras += h;
-      if (act.estado === "completado") horasCompletadas += h;
+      if (act.estado === "completado") {
+        horasCompletadas += h;
+        cantidadCompletadas += 1;
+      }
     });
 
     return {
@@ -213,6 +217,7 @@ export default function App() {
       horasCompletadas,
       totalActividades: delRango.length,
       cantidadActividades: delRango.length,
+      cantidadCompletadas,
     };
   }, [actividades, diasVisibles, jornada]);
 
@@ -267,13 +272,16 @@ export default function App() {
     mostrarNotificacion("Actividad eliminada");
   };
 
-  const handleToggleEstado = (id) => {
+  const handleToggleEstado = (id, nuevoEstado) => {
     const act = actividades.find((a) => a.id === id);
     if (!act) return;
 
-    const estados = ["pendiente", "en_progreso", "completado"];
-    const actualIdx = estados.indexOf(act.estado || "completado");
-    const siguiente = estados[(actualIdx + 1) % estados.length];
+    let siguiente;
+    if (nuevoEstado) {
+      siguiente = nuevoEstado;
+    } else {
+      siguiente = act.estado === "completado" ? "pendiente" : "completado";
+    }
 
     const nuevas = actividades.map((a) =>
       a.id === id ? { ...a, estado: siguiente } : a
@@ -283,10 +291,9 @@ export default function App() {
 
     const nombresEstados = {
       completado: "Completada",
-      en_progreso: "En progreso",
       pendiente: "Pendiente",
     };
-    mostrarNotificacion(`Estado: ${nombresEstados[siguiente]}`);
+    mostrarNotificacion(`Estado: ${nombresEstados[siguiente] || siguiente}`);
   };
 
   const handleCambiarMetaHoras = (nuevaMeta) => {
@@ -390,6 +397,7 @@ export default function App() {
 
       {modalActividad && (
         <ActivityModal
+          key={actividadEditando?.id || fechaParaNueva || "nueva"}
           actividadEditando={actividadEditando}
           fechaPredeterminada={fechaParaNueva}
           categorias={categorias}

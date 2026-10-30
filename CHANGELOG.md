@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.3] - 2026-10-30
+
+### Fixed
+- Fixed reactivity and calculation of completed hours vs total registered hours in `WeekNavigator`:
+  - Progress bar now tracks completed hours against weekly target quota (`horasCompletadas / metaActiva`) rather than premature 100% full bar when uncompleted hours remain.
+  - Quota message dynamically computes `metaActiva - horasCompletadas` (e.g. `Restan 4h para completar la meta`) and only displays `Meta semanal completada` when all target hours are completed.
+  - Footer count clarifies partial completion (e.g. `16h completadas (13 de 14 actividades)` instead of ambiguous `(14 actividades)`).
+  - Fixed `handleToggleEstado` to directly switch between `completado` and `pendiente` without cycling into hidden `en_progreso` state that prevented completed hours from incrementing.
+  - Added `useEffect` and dynamic `key` synchronization to `ActivityModal` so form inputs immediately reflect the edited activity and date.
+
 ## [1.2.2] - 2026-10-30
 
 ### Fixed

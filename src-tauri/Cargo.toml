@@ -1,6 +1,6 @@
 [package]
 name = "activity-tracker-desktop"
-version = "1.2.2"
+version = "1.2.3"
 description = "Native desktop application for work and research activity tracking, weekly hour quotas, custom typography themes, and executive PDF/CSV report generation."
 authors = ["David Alejandro Cruz Palacios <cruzd2249@gmail.com>"]
 license = "MIT"

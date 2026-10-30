@@ -78,13 +78,14 @@ export default function WeekNavigator({
   const horasTotales = Number(metricasSemana?.horasTotales ?? metricasSemana?.totalHoras) || 0;
   const horasCompletadas = Number(metricasSemana?.horasCompletadas) || 0;
   const totalActividades = Number(metricasSemana?.totalActividades ?? metricasSemana?.cantidadActividades) || 0;
+  const cantidadCompletadas = Number(metricasSemana?.cantidadCompletadas) || 0;
 
   const porcentajeMeta =
     metaActiva > 0
-      ? Math.min(100, Math.round((horasTotales / metaActiva) * 100))
+      ? Math.min(100, Math.round((horasCompletadas / metaActiva) * 100))
       : 0;
   const horasRestantes =
-    metaActiva > 0 ? Math.max(0, metaActiva - horasTotales) : 0;
+    metaActiva > 0 ? Math.max(0, metaActiva - horasCompletadas) : 0;
 
   return (
     <div className="week-navigator-bar">
@@ -161,11 +162,19 @@ export default function WeekNavigator({
               <Clock size={14} className="text-accent" />
               <span>
                 Horas en la semana:{" "}
-                <strong>{formatearHoras(horasTotales)}</strong>
+                <strong>{formatearHoras(horasCompletadas)}</strong>
                 {metaActiva > 0 ? (
                   <>
                     {" "}
                     de <strong>{metaActiva}h</strong>
+                  </>
+                ) : null}
+                {horasTotales > horasCompletadas ? (
+                  <>
+                    {" "}
+                    <span className="text-muted" style={{ fontSize: "0.85em" }}>
+                      ({formatearHoras(horasTotales)} registradas)
+                    </span>
                   </>
                 ) : null}
               </span>
@@ -230,15 +239,22 @@ export default function WeekNavigator({
             <span>
               {metaActiva > 0
                 ? horasRestantes > 0
-                  ? `Restan ${formatearHoras(horasRestantes)} para completar la semana`
+                  ? `Restan ${formatearHoras(horasRestantes)} para completar la meta`
                   : "Meta semanal completada"
                 : "Define tu meta semanal de horas"}
             </span>
             <span>
               <CheckCircle2 size={12} className="inline-icon text-green" />{" "}
-              {formatearHoras(horasCompletadas)} completadas (
-              {totalActividades}{" "}
-              {totalActividades === 1 ? "actividad" : "actividades"})
+              {formatearHoras(horasCompletadas)} completadas{" "}
+              {totalActividades > 0 ? (
+                cantidadCompletadas < totalActividades ? (
+                  `(${cantidadCompletadas} de ${totalActividades} actividades)`
+                ) : (
+                  `(${totalActividades} ${totalActividades === 1 ? "actividad" : "actividades"})`
+                )
+              ) : (
+                "(0 actividades)"
+              )}
             </span>
           </div>
         </div>

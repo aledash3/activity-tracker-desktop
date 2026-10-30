@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { X, Clock, CheckCircle2, AlertCircle, Utensils } from "lucide-react";
 import {
   formatearFechaTexto,
@@ -32,6 +32,33 @@ export default function ActivityModal({
   }));
 
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (actividadEditando) {
+      setForm({
+        fecha: actividadEditando.fecha || hoyISO(),
+        hora_inicio: actividadEditando.hora_inicio || "",
+        hora_fin: actividadEditando.hora_fin || "",
+        categoria: actividadEditando.categoria || "",
+        solicitante: actividadEditando.solicitante || "",
+        estado: actividadEditando.estado || "completado",
+        descripcion: actividadEditando.descripcion || "",
+        entregable: actividadEditando.entregable || "",
+      });
+    } else {
+      setForm({
+        fecha: fechaPredeterminada || hoyISO(),
+        hora_inicio: "",
+        hora_fin: "",
+        categoria: "",
+        solicitante: "",
+        estado: "completado",
+        descripcion: "",
+        entregable: "",
+      });
+    }
+    setError("");
+  }, [actividadEditando, fechaPredeterminada]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {

@@ -6,7 +6,7 @@
 [![React 19](https://img.shields.io/badge/React-19.3-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
 [![Vite 8](https://img.shields.io/badge/Vite-8.3-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vite.dev/)
 [![Platform](https://img.shields.io/badge/Plataforma-Windows%20x64-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/aledash3/activity-tracker-desktop/releases)
-[![Release](https://img.shields.io/badge/Versi%C3%B3n-1.2.2-10B981?style=for-the-badge)](https://github.com/aledash3/activity-tracker-desktop/releases)
+[![Release](https://img.shields.io/badge/Versi%C3%B3n-1.2.3-10B981?style=for-the-badge)](https://github.com/aledash3/activity-tracker-desktop/releases)
 [![Licencia: MIT](https://img.shields.io/badge/Licencia-MIT-yellow?style=for-the-badge)](LICENSE)
 [![English](https://img.shields.io/badge/Language-English-blue?style=for-the-badge)](README.md)
 
