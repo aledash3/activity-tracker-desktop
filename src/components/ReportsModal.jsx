@@ -56,9 +56,10 @@ export default function ReportsModal({
       rango = formatearFechaCorta(fechaBase);
     } else if (tipoReporte === "semana") {
       const lunes = lunesDe(fechaBase);
-      const fechasSemana = diasVisiblesSemana(lunes, jornada, []);
-      const inicio = fechasSemana[0];
-      const fin = fechasSemana[fechasSemana.length - 1];
+      const fechasSet = new Set(actividades.map((a) => a.fecha));
+      const fechasSemana = diasVisiblesSemana(lunes, jornada, fechasSet);
+      const inicio = fechasSemana[0] || lunes;
+      const fin = fechasSemana[fechasSemana.length - 1] || sumarDias(lunes, 6);
 
       filtradas = actividades.filter((a) => a.fecha >= inicio && a.fecha <= fin);
       titulo = `Reporte Semanal (${etiquetaDias(jornada.dias)})`;

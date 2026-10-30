@@ -46,12 +46,22 @@ export const horasActividad = (actividad, jornada) =>
 
 // Dias que se muestran en una semana: los laborables y, si hay registros en
 // un dia que dejo de ser laborable, ese dia tambien para no ocultar datos.
-export const diasVisiblesSemana = (lunes, jornada, fechasConActividades) =>
-  [0, 1, 2, 3, 4, 5, 6]
+export const diasVisiblesSemana = (lunes, jornada, fechasConActividades) => {
+  const tieneActividad = (iso) => {
+    if (!fechasConActividades) return false;
+    if (typeof fechasConActividades.has === "function") {
+      return fechasConActividades.has(iso);
+    }
+    if (Array.isArray(fechasConActividades)) {
+      return fechasConActividades.includes(iso);
+    }
+    return false;
+  };
+
+  return [0, 1, 2, 3, 4, 5, 6]
     .map((i) => sumarDias(lunes, i))
-    .filter(
-      (iso) => esDiaLaborable(iso, jornada) || fechasConActividades.has(iso)
-    );
+    .filter((iso) => esDiaLaborable(iso, jornada) || tieneActividad(iso));
+};
 
 // Busca el dia laborable mas reciente (hacia atras) a partir de una fecha
 export const diaLaborableCercano = (iso, jornada) => {
