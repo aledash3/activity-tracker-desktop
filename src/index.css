@@ -618,10 +618,11 @@ body {
 .weekly-grid-container {
   flex: 1;
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(var(--cols, 5), minmax(190px, 1fr));
   gap: 12px;
   align-items: stretch;
   min-height: calc(100vh - 175px);
+  overflow-x: auto;
 }
 
 @media (max-width: 840px) {
@@ -1145,6 +1146,96 @@ body {
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   padding: 12px 14px;
+}
+
+.form-hint {
+  margin: 6px 0 0;
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.lunch-hint {
+  color: var(--accent-text);
+}
+
+.day-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.day-picker-chip {
+  min-width: 44px;
+  padding: 5px 9px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.day-picker-chip:hover {
+  border-color: var(--accent);
+}
+
+.day-picker-chip.is-on {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+.recess-rule {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+
+.recess-rule-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lunch-block {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-subtle);
+  color: var(--text-muted);
+  font-size: 0.74rem;
+  font-weight: 600;
+}
+
+.lunch-label {
+  flex: 1;
+}
+
+.lunch-time {
+  font-variant-numeric: tabular-nums;
+}
+
+.off-day-badge {
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background-color: var(--amber-bg);
+  color: var(--amber-text);
+}
+
+.activity-requester {
+  font-size: 0.73rem;
+  color: var(--text-secondary);
 }
 
 .checkbox-inline-label {

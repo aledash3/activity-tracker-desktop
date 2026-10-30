@@ -6,23 +6,17 @@ import {
   CheckCircle2,
   Clock3,
 } from "lucide-react";
-import {
-  calcularHoras,
-  formatearHoras,
-} from "../utils/dateUtils";
+import { formatearHoras } from "../utils/dateUtils";
+import { horasActividad } from "../utils/jornada";
 
 export default function ActivityCard({
   actividad,
-  configReceso,
+  jornada,
   onEditar,
   onEliminar,
   onToggleEstado,
 }) {
-  const horas = calcularHoras(
-    actividad.hora_inicio,
-    actividad.hora_fin,
-    configReceso
-  );
+  const horas = horasActividad(actividad, jornada);
   const esCompletado = actividad.estado === "completado";
 
   return (
@@ -52,6 +46,12 @@ export default function ActivityCard({
       <p className="activity-description">
         {actividad.descripcion}
       </p>
+
+      {actividad.solicitante && (
+        <div className="activity-requester">
+          <strong>Solicita:</strong> {actividad.solicitante}
+        </div>
+      )}
 
       {/* Entregable o avance */}
       {actividad.entregable && (

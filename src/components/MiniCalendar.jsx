@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { MESES, aISO, hoyISO } from "../utils/dateUtils";
+import { MESES, NOMBRES_DIAS_CORTOS, aISO, hoyISO } from "../utils/dateUtils";
+import { DIAS_LABORABLES_DEFAULT } from "../utils/jornada";
 
 export default function MiniCalendar({
   fechaSeleccionada,
   onSeleccionarFecha,
   fechasConActividades = new Set(),
+  diasLaborables = DIAS_LABORABLES_DEFAULT,
 }) {
   const [mesVisto, setMesVisto] = useState(() => {
     const base = fechaSeleccionada
@@ -31,8 +33,6 @@ export default function MiniCalendar({
       new Date(mesVisto.getFullYear(), mesVisto.getMonth() + delta, 1)
     );
   };
-
-  const DIAS_LETRA = ["L", "M", "M", "J", "V", "S", "D"];
 
   return (
     <div className="mini-calendario">
@@ -61,12 +61,12 @@ export default function MiniCalendar({
       </div>
 
       <div className="mini-calendario-dias-header">
-        {DIAS_LETRA.map((letra, i) => (
+        {NOMBRES_DIAS_CORTOS.map((nombre, i) => (
           <span
-            key={i}
-            className={`dia-letra ${i >= 5 ? "dia-letra-inhabil" : ""}`}
+            key={nombre}
+            className={`dia-letra ${diasLaborables.includes(i) ? "" : "dia-letra-inhabil"}`}
           >
-            {letra}
+            {nombre.charAt(0)}
           </span>
         ))}
       </div>
@@ -82,12 +82,12 @@ export default function MiniCalendar({
             mesVisto.getMonth(),
             dia
           );
-          const diaSemana = (fechaObj.getDay() + 6) % 7; // 5=Sáb, 6=Dom
-          const esInhabil = diaSemana >= 5;
+          const diaSemana = (fechaObj.getDay() + 6) % 7;
           const iso = aISO(fechaObj);
           const esHoy = iso === hoy;
           const esSeleccionado = iso === fechaSeleccionada;
           const tieneActividades = fechasConActividades.has(iso);
+          const esInhabil = !diasLaborables.includes(diaSemana) && !tieneActividades;
 
           return (
             <button
@@ -100,12 +100,12 @@ export default function MiniCalendar({
               onClick={() => !esInhabil && onSeleccionarFecha(iso)}
               title={
                 esInhabil
-                  ? "Fin de semana deshabilitado"
+                  ? "Día no laborable"
                   : `${dia} de ${MESES[mesVisto.getMonth()]}`
               }
             >
               <span>{dia}</span>
-              {tieneActividades && !esInhabil && <span className="punto-actividad" />}
+              {tieneActividades && <span className="punto-actividad" />}
             </button>
           );
         })}

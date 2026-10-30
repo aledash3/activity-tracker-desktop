@@ -1,19 +1,22 @@
-import React, { useState, useEffect } from "react";
-import { X, Clock, CheckCircle2, AlertCircle } from "lucide-react";
+﻿import React, { useState, useEffect } from "react";
+import { X, Clock, CheckCircle2, AlertCircle, Utensils } from "lucide-react";
 import {
   formatearFechaTexto,
   calcularHoras,
   formatearHoras,
-  esFinDeSemana,
   aMinutos,
   hoyISO,
+  indiceDia,
+  NOMBRES_DIAS,
 } from "../utils/dateUtils";
+import { esDiaLaborable, recesoParaFecha } from "../utils/jornada";
 
 export default function ActivityModal({
   actividadEditando,
   fechaPredeterminada,
   categorias,
-  configReceso,
+  solicitantes,
+  jornada,
   onGuardar,
   onCerrar,
 }) {
@@ -22,6 +25,7 @@ export default function ActivityModal({
     hora_inicio: actividadEditando?.hora_inicio || "",
     hora_fin: actividadEditando?.hora_fin || "",
     categoria: actividadEditando?.categoria || "",
+    solicitante: actividadEditando?.solicitante || "",
     estado: actividadEditando?.estado || "completado",
     descripcion: actividadEditando?.descripcion || "",
     entregable: actividadEditando?.entregable || "",
@@ -37,11 +41,8 @@ export default function ActivityModal({
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [onCerrar]);
 
-  const horasEfectivas = calcularHoras(
-    form.hora_inicio,
-    form.hora_fin,
-    configReceso
-  );
+  const receso = form.fecha ? recesoParaFecha(jornada, form.fecha) : null;
+  const horasEfectivas = calcularHoras(form.hora_inicio, form.hora_fin, receso);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -49,8 +50,11 @@ export default function ActivityModal({
       setError("Selecciona la fecha de la actividad.");
       return;
     }
-    if (esFinDeSemana(form.fecha)) {
-      setError("Solo se permiten registros de lunes a viernes.");
+    const cambioFecha = !actividadEditando || actividadEditando.fecha !== form.fecha;
+    if (cambioFecha && !esDiaLaborable(form.fecha, jornada)) {
+      setError(
+        `El ${NOMBRES_DIAS[indiceDia(form.fecha)].toLowerCase()} no está marcado como laborable. Actívalo en Configuración o elige otra fecha.`
+      );
       return;
     }
     if (!form.hora_inicio || !form.hora_fin) {
@@ -62,7 +66,11 @@ export default function ActivityModal({
       return;
     }
     if (horasEfectivas <= 0) {
-      setError("La duración de la actividad debe ser mayor a 0 minutos.");
+      setError(
+        receso
+          ? `Ese horario cae dentro del almuerzo (${receso.inicio} a ${receso.fin}) y no suma horas. Elige otro horario.`
+          : "La duración de la actividad debe ser mayor a 0 minutos."
+      );
       return;
     }
     if (!form.descripcion.trim()) {
@@ -73,6 +81,7 @@ export default function ActivityModal({
     onGuardar({
       ...form,
       categoria: form.categoria.trim(),
+      solicitante: form.solicitante.trim(),
       descripcion: form.descripcion.trim(),
       entregable: form.entregable.trim(),
       id: actividadEditando ? actividadEditando.id : `act-${Date.now()}`,
@@ -203,6 +212,12 @@ export default function ActivityModal({
                   />
                 </div>
               </div>
+              {receso && (
+                <p className="form-hint lunch-hint">
+                  <Utensils size={12} className="inline-icon" /> Almuerzo ese día:{" "}
+                  {receso.inicio} a {receso.fin}. Se descuenta automáticamente.
+                </p>
+              )}
             </div>
 
             {/* 3. Descripción */}
@@ -222,8 +237,29 @@ export default function ActivityModal({
               />
             </div>
 
-            {/* 4. Entregable y Estado */}
+            {/* 4. Solicitante y Entregable */}
             <div className="grid-2">
+              <div className="form-group">
+                <label htmlFor="act-solicitante" className="form-label">
+                  Solicitante (Opcional)
+                </label>
+                <input
+                  id="act-solicitante"
+                  type="text"
+                  list="lista-solicitantes-modal"
+                  className="form-input"
+                  value={form.solicitante}
+                  onChange={(e) => setForm({ ...form, solicitante: e.target.value })}
+                />
+                {solicitantes.length > 0 && (
+                  <datalist id="lista-solicitantes-modal">
+                    {solicitantes.map((s) => (
+                      <option key={s} value={s} />
+                    ))}
+                  </datalist>
+                )}
+              </div>
+
               <div className="form-group">
                 <label htmlFor="act-entregable" className="form-label">
                   Entregable / Avance (Opcional)
@@ -236,9 +272,11 @@ export default function ActivityModal({
                   onChange={(e) => setForm({ ...form, entregable: e.target.value })}
                 />
               </div>
+            </div>
 
-              <div className="form-group">
-                <span className="form-label">Estado</span>
+            {/* 5. Estado */}
+            <div className="form-group">
+              <span className="form-label">Estado</span>
                 <div className="status-selector-2">
                   <button
                     type="button"
@@ -261,7 +299,6 @@ export default function ActivityModal({
                     <span>Pendiente</span>
                   </button>
                 </div>
-              </div>
             </div>
           </div>
 

@@ -1,10 +1,14 @@
-export const NOMBRES_DIAS = [
+﻿export const NOMBRES_DIAS = [
   "Lunes",
   "Martes",
   "Miércoles",
   "Jueves",
   "Viernes",
+  "Sábado",
+  "Domingo",
 ];
+
+export const NOMBRES_DIAS_CORTOS = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
 
 export const MESES = [
   "Enero",
@@ -29,17 +33,7 @@ export const aISO = (date) => {
   return `${year}-${month}-${day}`;
 };
 
-export const hoyISO = () => {
-  const hoy = new Date();
-  const day = hoy.getDay();
-  // Si hoy es sábado (6) o domingo (0), situar por defecto en el viernes o lunes de la semana laboral
-  if (day === 6) {
-    hoy.setDate(hoy.getDate() - 1);
-  } else if (day === 0) {
-    hoy.setDate(hoy.getDate() + 1);
-  }
-  return aISO(hoy);
-};
+export const hoyISO = () => aISO(new Date());
 
 export const sumarDias = (isoStr, dias) => {
   const [y, m, d] = isoStr.split("-").map(Number);
@@ -56,12 +50,10 @@ export const lunesDe = (isoStr) => {
   return aISO(date);
 };
 
-export const esFinDeSemana = (isoStr) => {
-  if (!isoStr) return false;
+// Indice del dia de la semana: Lunes = 0 ... Domingo = 6
+export const indiceDia = (isoStr) => {
   const [y, m, d] = isoStr.split("-").map(Number);
-  const date = new Date(y, m - 1, d);
-  const day = date.getDay();
-  return day === 0 || day === 6;
+  return (new Date(y, m - 1, d).getDay() + 6) % 7;
 };
 
 export const formatearFechaCorta = (isoStr) => {
@@ -80,8 +72,7 @@ export const formatearFechaTexto = (isoStr) => {
   if (!isoStr) return "";
   const [y, m, d] = isoStr.split("-").map(Number);
   const date = new Date(y, m - 1, d);
-  const todosDias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
-  const nombreDia = todosDias[(date.getDay() + 6) % 7];
+  const nombreDia = NOMBRES_DIAS[(date.getDay() + 6) % 7];
   const mesNombre = MESES[date.getMonth()];
   return `${nombreDia}, ${d} de ${mesNombre} de ${y}`;
 };
@@ -92,32 +83,31 @@ export const aMinutos = (horaStr) => {
   return h * 60 + m;
 };
 
-// Calcula las horas efectivas descontando de forma implícita el receso configurado
-export const calcularHoras = (horaInicio, horaFin, configReceso = null) => {
+// Horas efectivas de un tramo. `receso` es el almuerzo que aplica ese dia
+// ({ inicio, fin, minutos }) o null si no hay; solo se descuenta lo que se solapa.
+export const calcularHoras = (horaInicio, horaFin, receso = null) => {
   if (!horaInicio || !horaFin) return 0;
   const ini = aMinutos(horaInicio);
   const fin = aMinutos(horaFin);
   if (fin <= ini) return 0;
 
-  let minutosBrutos = fin - ini;
+  let minutos = fin - ini;
 
-  const recesoActivo = configReceso ? configReceso.activo !== false : true;
-  const recesoIni = aMinutos(configReceso?.inicio || "13:00");
-  const recesoFin = aMinutos(configReceso?.fin || "14:00");
-  const maxMinutosDescuento =
-    configReceso?.minutos !== undefined && configReceso?.minutos !== ""
-      ? Number(configReceso.minutos)
-      : Math.max(0, recesoFin - recesoIni);
+  if (receso) {
+    const recesoIni = aMinutos(receso.inicio);
+    const recesoFin = aMinutos(receso.fin);
+    const tope =
+      receso.minutos !== undefined && receso.minutos !== ""
+        ? Number(receso.minutos)
+        : recesoFin - recesoIni;
 
-  if (recesoActivo && recesoFin > recesoIni && maxMinutosDescuento > 0) {
-    const solapeInicio = Math.max(ini, recesoIni);
-    const solapeFin = Math.min(fin, recesoFin);
-    const minutosSolapados = Math.max(0, solapeFin - solapeInicio);
-    const descuento = Math.min(minutosSolapados, maxMinutosDescuento);
-    minutosBrutos = Math.max(0, minutosBrutos - descuento);
+    if (recesoFin > recesoIni && tope > 0) {
+      const solape = Math.max(0, Math.min(fin, recesoFin) - Math.max(ini, recesoIni));
+      minutos -= Math.min(solape, tope);
+    }
   }
 
-  return Math.round((minutosBrutos / 60) * 100) / 100;
+  return Math.round((Math.max(0, minutos) / 60) * 100) / 100;
 };
 
 export const formatearHoras = (horas) => {

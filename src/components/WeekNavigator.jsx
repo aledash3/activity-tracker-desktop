@@ -18,6 +18,9 @@ import {
 
 export default function WeekNavigator({
   lunesActual,
+  diasVisibles,
+  etiquetaJornada,
+  diasLaborables,
   fechaSeleccionada,
   onCambiarLunes,
   onSeleccionarFecha,
@@ -33,7 +36,6 @@ export default function WeekNavigator({
 
   const hoy = hoyISO();
   const lunesHoy = lunesDe(hoy);
-  const viernesActual = sumarDias(lunesActual, 4);
 
   const irSemanaAnterior = () => onCambiarLunes(sumarDias(lunesActual, -7));
   const irSemanaSiguiente = () => onCambiarLunes(sumarDias(lunesActual, 7));
@@ -122,9 +124,11 @@ export default function WeekNavigator({
           >
             <CalendarIcon size={15} className="text-accent" />
             <div className="week-date-text">
-              <span className="week-label">Lunes a Viernes</span>
+              <span className="week-label">{etiquetaJornada}</span>
               <strong>
-                {formatearFechaCorta(lunesActual)} al {formatearFechaCorta(viernesActual)}
+                {formatearFechaCorta(diasVisibles[0])}
+                {diasVisibles.length > 1 &&
+                  ` al ${formatearFechaCorta(diasVisibles[diasVisibles.length - 1])}`}
               </strong>
             </div>
           </button>
@@ -138,6 +142,7 @@ export default function WeekNavigator({
                   setMostrarCalendarioPopover(false);
                 }}
                 fechasConActividades={fechasConActividades}
+                diasLaborables={diasLaborables}
               />
             </div>
           )}

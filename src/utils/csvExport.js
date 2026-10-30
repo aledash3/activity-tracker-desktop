@@ -1,13 +1,7 @@
-import { formatearFechaCorta, calcularHoras } from "./dateUtils";
+﻿import { formatearFechaCorta } from "./dateUtils";
+import { horasActividad } from "./jornada";
 
-export const exportarCSV = ({ perfil, actividades }) => {
-  const configReceso = {
-    activo: perfil.receso_activo !== false,
-    inicio: perfil.receso_inicio || "13:00",
-    fin: perfil.receso_fin || "14:00",
-    minutos: perfil.receso_minutos ?? 60,
-  };
-
+export const exportarCSV = ({ perfil, jornada, actividades }) => {
   const encabezados = [
     "#",
     "Fecha",
@@ -15,6 +9,7 @@ export const exportarCSV = ({ perfil, actividades }) => {
     "Hora Fin",
     "Horas",
     "Categoria",
+    "Solicitante",
     "Estado",
     "Descripcion de Actividad",
     "Entregable / Avance",
@@ -26,7 +21,7 @@ export const exportarCSV = ({ perfil, actividades }) => {
   ];
 
   const filas = actividades.map((a, i) => {
-    const horas = calcularHoras(a.hora_inicio, a.hora_fin, configReceso);
+    const horas = horasActividad(a, jornada);
     return [
       i + 1,
       formatearFechaCorta(a.fecha),
@@ -34,6 +29,7 @@ export const exportarCSV = ({ perfil, actividades }) => {
       a.hora_fin || "",
       horas,
       `"${(a.categoria || "").replace(/"/g, '""')}"`,
+      `"${(a.solicitante || "").replace(/"/g, '""')}"`,
       (a.estado || "completado").toUpperCase(),
       `"${(a.descripcion || "").replace(/"/g, '""')}"`,
       `"${(a.entregable || "").replace(/"/g, '""')}"`,

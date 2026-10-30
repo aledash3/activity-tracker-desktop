@@ -1,10 +1,7 @@
-import jsPDF from "jspdf";
+﻿import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import {
-  formatearFechaCorta,
-  formatearFechaTexto,
-  calcularHoras,
-} from "./dateUtils";
+import { formatearFechaCorta, formatearFechaTexto } from "./dateUtils";
+import { horasActividad } from "./jornada";
 
 const hexToRgb = (hex) => {
   const clean = (hex || "#2563eb").replace("#", "");
@@ -18,6 +15,7 @@ export const generarPDFReporte = ({
   colorAcento,
   tituloPeriodo,
   rangoTexto,
+  jornada,
   actividades,
 }) => {
   const doc = new jsPDF({
@@ -30,13 +28,6 @@ export const generarPDFReporte = ({
   const darkSlate = [15, 23, 42];
   const lightBg = [248, 250, 252];
   const grayBorder = [203, 213, 225];
-
-  const configReceso = {
-    activo: perfil.receso_activo !== false,
-    inicio: perfil.receso_inicio || "13:00",
-    fin: perfil.receso_fin || "14:00",
-    minutos: perfil.receso_minutos ?? 60,
-  };
 
   // 1. Encabezado
   doc.setFillColor(...primaryColor);
@@ -124,7 +115,7 @@ export const generarPDFReporte = ({
   let horasCompletadas = 0;
 
   const filasTabla = actividades.map((act, index) => {
-    const horas = calcularHoras(act.hora_inicio, act.hora_fin, configReceso);
+    const horas = horasActividad(act, jornada);
     totalHoras += horas;
     if (act.estado === "completado") horasCompletadas += horas;
 
@@ -141,6 +132,7 @@ export const generarPDFReporte = ({
       `${horas}h`,
       act.categoria || "-",
       detalleCompleto,
+      act.solicitante || "-",
       estadoTexto,
     ];
   });
@@ -148,7 +140,7 @@ export const generarPDFReporte = ({
   // 5. Renderizado de la tabla
   autoTable(doc, {
     startY: y,
-    head: [["#", "Fecha", "Horario", "Horas", "Categoría", "Actividad / Descripción", "Estado"]],
+    head: [["#", "Fecha", "Horario", "Horas", "Categoría", "Actividad / Descripción", "Solicitante", "Estado"]],
     body: filasTabla,
     theme: "grid",
     headStyles: {
@@ -166,19 +158,20 @@ export const generarPDFReporte = ({
       cellPadding: 2.2,
     },
     columnStyles: {
-      0: { cellWidth: 8, halign: "center" },
-      1: { cellWidth: 19, halign: "center" },
-      2: { cellWidth: 25, halign: "center" },
-      3: { cellWidth: 13, halign: "center", fontStyle: "bold" },
-      4: { cellWidth: 28 },
-      5: { cellWidth: 67 },
-      6: { cellWidth: 22, halign: "center", fontStyle: "bold" },
+      0: { cellWidth: 7, halign: "center" },
+      1: { cellWidth: 18, halign: "center" },
+      2: { cellWidth: 22, halign: "center" },
+      3: { cellWidth: 12, halign: "center", fontStyle: "bold" },
+      4: { cellWidth: 24 },
+      5: { cellWidth: 55 },
+      6: { cellWidth: 22 },
+      7: { cellWidth: 22, halign: "center", fontStyle: "bold" },
     },
     alternateRowStyles: {
       fillColor: [248, 250, 252],
     },
     didParseCell: (data) => {
-      if (data.section === "body" && data.column.index === 6) {
+      if (data.section === "body" && data.column.index === 7) {
         if (data.cell.raw === "COMPLETADO") {
           data.cell.styles.textColor = [21, 128, 61];
         } else {

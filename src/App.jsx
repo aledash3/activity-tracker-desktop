@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+﻿import React, { useState, useEffect, useMemo } from "react";
 import Navbar from "./components/Navbar";
 import WeekNavigator from "./components/WeekNavigator";
 import WeeklyGrid from "./components/WeeklyGrid";
@@ -22,12 +22,14 @@ import {
   importarBackupJSON,
 } from "./utils/storage";
 
+import { hoyISO, lunesDe } from "./utils/dateUtils";
 import {
-  hoyISO,
-  lunesDe,
-  sumarDias,
-  calcularHoras,
-} from "./utils/dateUtils";
+  jornadaDePerfil,
+  diasVisiblesSemana,
+  diaLaborableCercano,
+  etiquetaDias,
+  horasActividad,
+} from "./utils/jornada";
 
 // Convierte un código hex en variantes rgba para fondos suaves y bordes
 const hexToRgba = (hex, alpha) => {
@@ -48,8 +50,17 @@ export default function App() {
   const [categorias, setCategorias] = useState(cargarCategorias);
   const [apariencia, setApariencia] = useState(cargarApariencia);
 
-  const [lunesActual, setLunesActual] = useState(() => lunesDe(hoy));
-  const [fechaSeleccionada, setFechaSeleccionada] = useState(hoy);
+  const jornada = useMemo(
+    () => jornadaDePerfil({ dias_laborables: perfil.dias_laborables, recesos: perfil.recesos }),
+    [perfil.dias_laborables, perfil.recesos]
+  );
+
+  const [fechaSeleccionada, setFechaSeleccionada] = useState(() =>
+    diaLaborableCercano(hoy, jornada)
+  );
+  const [lunesActual, setLunesActual] = useState(() =>
+    lunesDe(diaLaborableCercano(hoy, jornada))
+  );
 
   // Modales
   const [modalActividad, setModalActividad] = useState(false);
@@ -135,39 +146,31 @@ export default function App() {
     }));
   };
 
-  // Configuración implícita del receso diario
-  const configReceso = useMemo(
-    () => ({
-      activo: perfil.receso_activo !== false,
-      inicio: perfil.receso_inicio || "13:00",
-      fin: perfil.receso_fin || "14:00",
-      minutos: perfil.receso_minutos ?? 60,
-    }),
-    [
-      perfil.receso_activo,
-      perfil.receso_inicio,
-      perfil.receso_fin,
-      perfil.receso_minutos,
-    ]
-  );
-
   const fechasConActividades = useMemo(() => {
     return new Set(actividades.map((a) => a.fecha));
   }, [actividades]);
 
+  const diasVisibles = useMemo(
+    () => diasVisiblesSemana(lunesActual, jornada, fechasConActividades),
+    [lunesActual, jornada, fechasConActividades]
+  );
+
+  const solicitantes = useMemo(() => {
+    const todos = actividades.map((a) => a.solicitante).filter(Boolean);
+    if (perfil.supervisor?.trim()) todos.push(perfil.supervisor.trim());
+    return [...new Set(todos)].sort((a, b) => a.localeCompare(b));
+  }, [actividades, perfil.supervisor]);
+
   const metricasSemana = useMemo(() => {
-    const diasLaborables = [0, 1, 2, 3, 4].map((i) =>
-      sumarDias(lunesActual, i)
-    );
     const actividadesSemana = actividades.filter((a) =>
-      diasLaborables.includes(a.fecha)
+      diasVisibles.includes(a.fecha)
     );
 
     let horasTotales = 0;
     let horasCompletadas = 0;
 
     actividadesSemana.forEach((a) => {
-      const h = calcularHoras(a.hora_inicio, a.hora_fin, configReceso);
+      const h = horasActividad(a, jornada);
       horasTotales += h;
       if (a.estado === "completado") {
         horasCompletadas += h;
@@ -179,8 +182,7 @@ export default function App() {
       horasTotales,
       horasCompletadas,
     };
-  }, [actividades, lunesActual, configReceso]);
-
+  }, [actividades, diasVisibles, jornada]);
   const handleSeleccionarFechaCalendario = (iso) => {
     setFechaSeleccionada(iso);
     setLunesActual(lunesDe(iso));
@@ -271,6 +273,9 @@ export default function App() {
         <div className="content-container">
           <WeekNavigator
             lunesActual={lunesActual}
+            diasVisibles={diasVisibles}
+            etiquetaJornada={etiquetaDias(jornada.dias)}
+            diasLaborables={jornada.dias}
             fechaSeleccionada={fechaSeleccionada}
             onCambiarLunes={setLunesActual}
             onSeleccionarFecha={handleSeleccionarFechaCalendario}
@@ -282,12 +287,12 @@ export default function App() {
 
           <section
             className="weekly-schedule-section"
-            aria-label="Calendario semanal de lunes a viernes"
+            aria-label="Calendario semanal"
           >
             <WeeklyGrid
-              lunesActual={lunesActual}
+              diasVisibles={diasVisibles}
               actividades={actividades}
-              configReceso={configReceso}
+              jornada={jornada}
               onNuevaActividad={handleNuevaActividad}
               onEditarActividad={handleEditarActividad}
               onEliminarActividad={handleEliminarActividad}
@@ -308,7 +313,8 @@ export default function App() {
           actividadEditando={actividadEditando}
           fechaPredeterminada={fechaParaNueva}
           categorias={categorias}
-          configReceso={configReceso}
+          solicitantes={solicitantes}
+          jornada={jornada}
           onGuardar={handleGuardarActividad}
           onCerrar={() => {
             setModalActividad(false);
@@ -321,7 +327,7 @@ export default function App() {
         <ReportsModal
           perfil={perfil}
           colorAcento={apariencia.colorAcento}
-          configReceso={configReceso}
+          jornada={jornada}
           actividades={actividades}
           fechaReferencia={fechaSeleccionada}
           onCerrar={() => setModalReportes(false)}

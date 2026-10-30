@@ -1,4 +1,5 @@
-import { hoyISO } from "./dateUtils";
+﻿import { hoyISO } from "./dateUtils";
+import { DIAS_LABORABLES_DEFAULT, migrarJornadaLegacy } from "./jornada";
 
 const KEY_ACTIVIDADES = "bitacora_actividades_data_v3";
 const KEY_PERFIL = "bitacora_actividades_perfil_v3";
@@ -80,10 +81,8 @@ export const PERFIL_VACIO = {
   cargo: "",
   supervisor: "",
   meta_horas_semanales: "",
-  receso_activo: true,
-  receso_inicio: "13:00",
-  receso_fin: "14:00",
-  receso_minutos: 60,
+  dias_laborables: DIAS_LABORABLES_DEFAULT,
+  recesos: [],
 };
 
 export const APARIENCIA_DEFAULT = {
@@ -113,11 +112,13 @@ export const guardarActividades = (actividades) => {
   }
 };
 
+const normalizarPerfil = (perfil) => ({ ...PERFIL_VACIO, ...migrarJornadaLegacy(perfil) });
+
 export const cargarPerfil = () => {
   try {
     const raw = localStorage.getItem(KEY_PERFIL);
     if (!raw) return { ...PERFIL_VACIO };
-    return { ...PERFIL_VACIO, ...JSON.parse(raw) };
+    return normalizarPerfil(JSON.parse(raw));
   } catch {
     return { ...PERFIL_VACIO };
   }
@@ -170,7 +171,7 @@ export const guardarApariencia = (apariencia) => {
 
 export const exportarBackupJSON = () => {
   const data = {
-    version: "3.0",
+    version: "3.1",
     fecha_exportacion: new Date().toISOString(),
     perfil: cargarPerfil(),
     categorias: cargarCategorias(),
@@ -197,7 +198,7 @@ export const importarBackupJSON = (file) => {
         const data = JSON.parse(e.target.result);
         if (data.actividades && Array.isArray(data.actividades)) {
           guardarActividades(data.actividades);
-          if (data.perfil) guardarPerfil({ ...PERFIL_VACIO, ...data.perfil });
+          if (data.perfil) guardarPerfil(normalizarPerfil(data.perfil));
           if (Array.isArray(data.categorias)) guardarCategorias(data.categorias);
           if (data.apariencia) guardarApariencia({ ...APARIENCIA_DEFAULT, ...data.apariencia });
           resolve(true);

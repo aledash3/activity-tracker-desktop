@@ -1,19 +1,32 @@
 import React from "react";
-import { Plus, Clock } from "lucide-react";
+import { Plus, Clock, Utensils } from "lucide-react";
 import ActivityCard from "./ActivityCard";
 import {
   NOMBRES_DIAS,
-  sumarDias,
+  indiceDia,
   formatearDiaMes,
   hoyISO,
-  calcularHoras,
   formatearHoras,
 } from "../utils/dateUtils";
+import {
+  esDiaLaborable,
+  horasActividad,
+  recesoParaFecha,
+} from "../utils/jornada";
+
+// Mezcla el almuerzo del dia en la lista, en su posicion horaria
+const conAlmuerzo = (lista, receso) => {
+  const items = lista.map((act) => ({ tipo: "actividad", act }));
+  if (!receso) return items;
+  const pos = items.findIndex((it) => (it.act.hora_inicio || "") >= receso.inicio);
+  items.splice(pos === -1 ? items.length : pos, 0, { tipo: "almuerzo", receso });
+  return items;
+};
 
 export default function WeeklyGrid({
-  lunesActual,
+  diasVisibles,
   actividades,
-  configReceso,
+  jornada,
   onNuevaActividad,
   onEditarActividad,
   onEliminarActividad,
@@ -21,29 +34,28 @@ export default function WeeklyGrid({
 }) {
   const hoy = hoyISO();
 
-  const dias = NOMBRES_DIAS.map((nombre, i) => {
-    const fecha = sumarDias(lunesActual, i);
+  const dias = diasVisibles.map((fecha) => {
     const lista = actividades
       .filter((a) => a.fecha === fecha)
       .sort((a, b) => (a.hora_inicio || "").localeCompare(b.hora_inicio || ""));
-
-    const horasDia = lista.reduce(
-      (acc, act) =>
-        acc + calcularHoras(act.hora_inicio, act.hora_fin, configReceso),
-      0
-    );
+    const receso = recesoParaFecha(jornada, fecha);
 
     return {
       fecha,
-      nombre,
+      nombre: NOMBRES_DIAS[indiceDia(fecha)],
       lista,
-      horasDia,
+      items: conAlmuerzo(lista, receso),
+      horasDia: lista.reduce((acc, act) => acc + horasActividad(act, jornada), 0),
       esHoy: fecha === hoy,
+      noLaborable: !esDiaLaborable(fecha, jornada),
     };
   });
 
   return (
-    <div className="weekly-grid-container">
+    <div
+      className="weekly-grid-container"
+      style={{ "--cols": Math.max(1, dias.length) }}
+    >
       {dias.map((dia) => (
         <div
           key={dia.fecha}
@@ -55,6 +67,11 @@ export default function WeeklyGrid({
               <div className="day-name-group">
                 <span className="day-name">{dia.nombre}</span>
                 {dia.esHoy && <span className="today-badge">HOY</span>}
+                {dia.noLaborable && (
+                  <span className="off-day-badge" title="Día no laborable con registros">
+                    No laborable
+                  </span>
+                )}
               </div>
               <span
                 className={`day-hours-badge ${
@@ -82,7 +99,28 @@ export default function WeeklyGrid({
 
           {/* Cuerpo de actividades */}
           <div className="day-activities-list">
-            {dia.lista.length === 0 ? (
+            {dia.items.map((item) =>
+              item.tipo === "almuerzo" ? (
+                <div key="almuerzo" className="lunch-block">
+                  <Utensils size={13} aria-hidden="true" />
+                  <span className="lunch-label">Almuerzo</span>
+                  <span className="lunch-time">
+                    {item.receso.inicio} - {item.receso.fin}
+                  </span>
+                </div>
+              ) : (
+                <ActivityCard
+                  key={item.act.id}
+                  actividad={item.act}
+                  jornada={jornada}
+                  onEditar={onEditarActividad}
+                  onEliminar={onEliminarActividad}
+                  onToggleEstado={onToggleEstado}
+                />
+              )
+            )}
+
+            {dia.lista.length === 0 && (
               <button
                 type="button"
                 className="empty-day-state"
@@ -94,17 +132,6 @@ export default function WeeklyGrid({
                   Haz clic para agregar una actividad en este día
                 </span>
               </button>
-            ) : (
-              dia.lista.map((act) => (
-                <ActivityCard
-                  key={act.id}
-                  actividad={act}
-                  configReceso={configReceso}
-                  onEditar={onEditarActividad}
-                  onEliminar={onEliminarActividad}
-                  onToggleEstado={onToggleEstado}
-                />
-              ))
             )}
           </div>
 

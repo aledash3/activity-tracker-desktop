@@ -53,7 +53,7 @@ export default function Navbar({
           <div>
             <h1 className="brand-title">Control de Actividades</h1>
             <p className="brand-subtitle">
-              {subtituloTrabajo || "Bitácora personal de trabajo (Lunes a Viernes)"}
+              {subtituloTrabajo || "Bitácora personal de trabajo"}
             </p>
           </div>
         </div>
@@ -101,12 +101,12 @@ export default function Navbar({
             <span className="hide-mobile">Estilo</span>
           </button>
 
-          {/* Configuración de lugar de trabajo, cargo y receso */}
+          {/* Configuración de lugar de trabajo, cargo, días laborables y almuerzo */}
           <button
             type="button"
             className={`profile-chip ${!tienePerfilConfigurado ? "profile-chip-empty" : ""}`}
             onClick={onAbrirPerfil}
-            title="Configurar lugar de trabajo, cargo, horas semanales y receso"
+            title="Configurar lugar de trabajo, cargo, días laborables, horas semanales y almuerzo"
           >
             <div className="profile-avatar" aria-hidden="true">
               <Briefcase size={14} />

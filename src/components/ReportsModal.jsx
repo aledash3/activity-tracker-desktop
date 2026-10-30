@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+﻿import React, { useState, useMemo, useEffect } from "react";
 import {
   X,
   Download,
@@ -12,19 +12,18 @@ import {
 import {
   hoyISO,
   lunesDe,
-  sumarDias,
   formatearFechaCorta,
   formatearFechaTexto,
-  calcularHoras,
   formatearHoras,
 } from "../utils/dateUtils";
+import { diasVisiblesSemana, etiquetaDias, horasActividad } from "../utils/jornada";
 import { generarPDFReporte } from "../utils/pdfExport";
 import { exportarCSV } from "../utils/csvExport";
 
 export default function ReportsModal({
   perfil,
   colorAcento,
-  configReceso,
+  jornada,
   actividades,
   fechaReferencia,
   onCerrar,
@@ -54,13 +53,21 @@ export default function ReportsModal({
       };
     }
     if (tipoReporte === "semana") {
-      const lunes = lunesDe(fechaBase);
-      const viernes = sumarDias(lunes, 4);
+      const dias = diasVisiblesSemana(
+        lunesDe(fechaBase),
+        jornada,
+        new Set(actividades.map((a) => a.fecha))
+      );
+      const primero = dias[0];
+      const ultimo = dias[dias.length - 1];
       return {
-        desde: lunes,
-        hasta: viernes,
-        tituloPeriodo: "Reporte Semanal (Lunes a Viernes)",
-        rangoTexto: `Del ${formatearFechaCorta(lunes)} al ${formatearFechaCorta(viernes)}`,
+        desde: primero,
+        hasta: ultimo,
+        tituloPeriodo: `Reporte Semanal (${etiquetaDias(jornada.dias)})`,
+        rangoTexto:
+          primero === ultimo
+            ? formatearFechaCorta(primero)
+            : `Del ${formatearFechaCorta(primero)} al ${formatearFechaCorta(ultimo)}`,
       };
     }
     if (tipoReporte === "mes") {
@@ -85,7 +92,7 @@ export default function ReportsModal({
       tituloPeriodo: "Reporte por Periodo",
       rangoTexto: `Del ${formatearFechaCorta(desdePersonalizado)} al ${formatearFechaCorta(hastaPersonalizado)}`,
     };
-  }, [tipoReporte, fechaBase, desdePersonalizado, hastaPersonalizado]);
+  }, [tipoReporte, fechaBase, desdePersonalizado, hastaPersonalizado, jornada, actividades]);
 
   const actividadesFiltradas = useMemo(() => {
     return actividades
@@ -102,7 +109,7 @@ export default function ReportsModal({
     let horasCompletadas = 0;
 
     actividadesFiltradas.forEach((a) => {
-      const h = calcularHoras(a.hora_inicio, a.hora_fin, configReceso);
+      const h = horasActividad(a, jornada);
       totalHoras += h;
       if (a.estado === "completado") horasCompletadas += h;
     });
@@ -115,7 +122,7 @@ export default function ReportsModal({
       horasCompletadas,
       metaSemanal,
     };
-  }, [actividadesFiltradas, configReceso, perfil.meta_horas_semanales]);
+  }, [actividadesFiltradas, jornada, perfil.meta_horas_semanales]);
 
   const descargarPDF = () => {
     generarPDFReporte({
@@ -123,6 +130,7 @@ export default function ReportsModal({
       colorAcento,
       tituloPeriodo,
       rangoTexto,
+      jornada,
       actividades: actividadesFiltradas,
     });
   };
@@ -131,6 +139,7 @@ export default function ReportsModal({
     exportarCSV({
       perfil,
       tituloPeriodo,
+      jornada,
       actividades: actividadesFiltradas,
     });
   };
@@ -173,7 +182,7 @@ export default function ReportsModal({
                 className={`report-tab ${tipoReporte === "semana" ? "active" : ""}`}
                 onClick={() => setTipoReporte("semana")}
               >
-                Semanal (Lun - Vie)
+                Semanal
               </button>
               <button
                 type="button"
@@ -354,6 +363,7 @@ export default function ReportsModal({
                       <th>Horario</th>
                       <th>Horas</th>
                       <th>Categoría</th>
+                      <th>Solicitante</th>
                       <th>Actividad / Descripción</th>
                       <th>Entregable / Avance</th>
                       <th>Estado</th>
@@ -371,10 +381,11 @@ export default function ReportsModal({
                         </td>
                         <td>
                           <strong>
-                            {calcularHoras(act.hora_inicio, act.hora_fin, configReceso)}h
+                            {horasActividad(act, jornada)}h
                           </strong>
                         </td>
                         <td>{act.categoria || "-"}</td>
+                        <td>{act.solicitante || "-"}</td>
                         <td>{act.descripcion}</td>
                         <td>{act.entregable || "-"}</td>
                         <td>
