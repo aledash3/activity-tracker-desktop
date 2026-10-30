@@ -10,11 +10,13 @@ lerna-debug.log*
 # Dependencies
 node_modules/
 
-# Production builds
+# Production builds and Rust targets
 dist/
 dist-ssr/
 release/
 out/
+src-tauri/target/
+src-tauri/gen/
 
 # Environment and local storage
 *.local

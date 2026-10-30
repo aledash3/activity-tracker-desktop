@@ -1,0 +1,28 @@
+[package]
+name = "activity-tracker-desktop"
+version = "1.1.0"
+description = "Native desktop application for work and research activity tracking, weekly hour quotas, custom typography themes, and executive PDF/CSV report generation."
+authors = ["David Alejandro Cruz Palacios <cruzd2249@gmail.com>"]
+license = "MIT"
+repository = "https://github.com/aledash3/activity-tracker-desktop"
+edition = "2021"
+rust-version = "1.77.2"
+
+[lib]
+name = "activity_tracker_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+tauri = { version = "2", features = [] }
+
+[profile.release]
+panic = "abort"
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true

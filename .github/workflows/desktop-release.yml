@@ -29,35 +29,42 @@ jobs:
           cache: 'npm'
           cache-dependency-path: 'package-lock.json'
 
-      - name: Install dependencies
+      - name: Install Rust stable toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust build cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Install frontend dependencies
         run: npm ci
 
       - name: Run static analysis (Oxlint)
         run: npm run lint
 
-      - name: Build web application
-        run: npm run build
+      - name: Build Tauri Windows Executable and NSIS Installer
+        run: npx tauri build --bundles nsis
 
-      - name: Package Desktop Executable and Installer
-        run: npm run desktop:dist
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Stage release artifacts
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path release -Force | Out-Null
+          Copy-Item "src-tauri/target/release/bundle/nsis/*.exe" -Destination "release/Bitacora-de-Actividades-Setup.exe" -Force
+          Copy-Item "src-tauri/target/release/activity-tracker-desktop.exe" -Destination "release/Bitacora-de-Actividades-Portable.exe" -Force
 
       - name: Upload installer artifact
         uses: actions/upload-artifact@v4
         with:
           name: windows-installer
-          path: |
-            release/*.exe
-            release/*.blockmap
+          path: release/*.exe
           if-no-files-found: error
 
-      - name: Create GitHub Release
+      - name: Publish GitHub Release
         if: startsWith(github.ref, 'tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            release/*.exe
+          files: release/*.exe
           generate_release_notes: true
           draft: false
           prerelease: false
