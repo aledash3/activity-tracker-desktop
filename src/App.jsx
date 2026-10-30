@@ -208,8 +208,10 @@ export default function App() {
     });
 
     return {
+      horasTotales: totalHoras,
       totalHoras,
       horasCompletadas,
+      totalActividades: delRango.length,
       cantidadActividades: delRango.length,
     };
   }, [actividades, diasVisibles, jornada]);

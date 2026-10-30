@@ -75,12 +75,16 @@ export default function WeekNavigator({
   };
 
   const metaActiva = Number(metaHorasSemanales) || 0;
+  const horasTotales = Number(metricasSemana?.horasTotales ?? metricasSemana?.totalHoras) || 0;
+  const horasCompletadas = Number(metricasSemana?.horasCompletadas) || 0;
+  const totalActividades = Number(metricasSemana?.totalActividades ?? metricasSemana?.cantidadActividades) || 0;
+
   const porcentajeMeta =
     metaActiva > 0
-      ? Math.min(100, Math.round((metricasSemana.horasTotales / metaActiva) * 100))
+      ? Math.min(100, Math.round((horasTotales / metaActiva) * 100))
       : 0;
   const horasRestantes =
-    metaActiva > 0 ? Math.max(0, metaActiva - metricasSemana.horasTotales) : 0;
+    metaActiva > 0 ? Math.max(0, metaActiva - horasTotales) : 0;
 
   return (
     <div className="week-navigator-bar">
@@ -157,7 +161,7 @@ export default function WeekNavigator({
               <Clock size={14} className="text-accent" />
               <span>
                 Horas en la semana:{" "}
-                <strong>{formatearHoras(metricasSemana.horasTotales)}</strong>
+                <strong>{formatearHoras(horasTotales)}</strong>
                 {metaActiva > 0 ? (
                   <>
                     {" "}
@@ -232,9 +236,9 @@ export default function WeekNavigator({
             </span>
             <span>
               <CheckCircle2 size={12} className="inline-icon text-green" />{" "}
-              {formatearHoras(metricasSemana.horasCompletadas)} completadas (
-              {metricasSemana.totalActividades}{" "}
-              {metricasSemana.totalActividades === 1 ? "actividad" : "actividades"})
+              {formatearHoras(horasCompletadas)} completadas (
+              {totalActividades}{" "}
+              {totalActividades === 1 ? "actividad" : "actividades"})
             </span>
           </div>
         </div>
