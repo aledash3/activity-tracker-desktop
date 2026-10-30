@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- Configurable working days: any combination of Monday to Sunday, with one board column per working day.
+- Lunch schedules per group of days, rendered automatically in the weekly board and subtracted from overlapping activities.
+- Requester field on every activity, shown on cards, the report table, the PDF, and the CSV export.
+
+### Changed
+- Replaced the single break setting (`receso_inicio`, `receso_fin`, `receso_minutos`) with a list of lunch rules. Existing settings are migrated automatically.
+- Activities that fall entirely inside the lunch window now show a specific message instead of a generic duration error.
+
 ## [1.0.0] - 2026-10-30
 
 ### Added

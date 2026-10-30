@@ -8,7 +8,7 @@
 [![Licencia: MIT](https://img.shields.io/badge/Licencia-MIT-yellow?style=for-the-badge)](LICENSE)
 [![English](https://img.shields.io/badge/Language-English-blue?style=for-the-badge)](README.md)
 
-Aplicación nativa de escritorio para el registro de actividades laborales y de investigación de lunes a viernes, control de metas de horas semanales, personalización de colores y caligrafía, y generación de reportes ejecutivos en PDF y CSV (Excel).
+Aplicación nativa de escritorio para el registro de actividades laborales y de investigación con una semana laboral totalmente configurable, control de metas de horas semanales, personalización de colores y caligrafía, y generación de reportes ejecutivos en PDF y CSV (Excel).
 
 > **Idioma / Language:** Español | [Read documentation in English](README.md)
 
@@ -30,8 +30,9 @@ Aplicación nativa de escritorio para el registro de actividades laborales y de 
 
 ## Características Principales
 
-- **Tablero Semanal de Lunes a Viernes:** Cuadrícula de 5 columnas a pantalla completa con botones de creación rápida por día, cambio de estado (`Completado` / `Pendiente`) y selector mensual con fines de semana deshabilitados.
-- **Descuento Implícito y Configurable de Receso Diario:** Permite definir el horario de pausa o almuerzo (por defecto de `13:00` a `14:00`, `60` minutos). Cuando una actividad cruza ese intervalo (por ejemplo de `08:00` a `17:00`), el cálculo descuenta automáticamente el tiempo de receso y registra `8h` efectivas sin sobrecargar la interfaz ni los reportes.
+- **Tablero Semanal Configurable:** Elige qué días trabajas (cualquier combinación de lunes a domingo). El tablero muestra una columna a pantalla completa por cada día laborable, con botones de creación rápida, cambio de estado (`Completado` / `Pendiente`) y selector mensual con los días no laborables deshabilitados.
+- **Horarios de Almuerzo por Día:** Define uno o más horarios de almuerzo y asigna cada uno a un grupo de días (por ejemplo, de lunes a miércoles de `13:00` a `14:00` y el resto de `12:00` a `12:30`). El bloque de almuerzo aparece solo en cada día correspondiente del calendario, sin registrarlo a mano, y su tiempo se descuenta de las actividades que lo cruzan (de `08:00` a `17:00` con una hora de almuerzo se registran `8h`).
+- **Solicitante de Actividades:** Cada actividad puede indicar quién la solicita, con sugerencias tomadas de registros anteriores. El solicitante aparece en el tablero, en la tabla de reportes, en el PDF y en el CSV.
 - **Meta de Horas Semanales:** Configuración rápida de horas objetivo por semana (`meta_horas_semanales`) desde la barra de progreso o desde el perfil laboral.
 - **Estudio de Apariencia y Caligrafía:**
   - Modo Claro y Modo Oscuro.
@@ -74,15 +75,17 @@ activity-tracker-desktop/
 │   │   ├── ActivityModal.jsx    # Formulario modal de creación y edición
 │   │   ├── AppearanceModal.jsx  # Estudio de colores, tema y caligrafía
 │   │   ├── CatalogModal.jsx     # Administrador de categorías personalizadas
-│   │   ├── MiniCalendar.jsx     # Calendario mensual (Lunes a Viernes habilitados)
+│   │   ├── DayPicker.jsx        # Selector de días de la semana
+│   │   ├── MiniCalendar.jsx     # Calendario mensual (solo días laborables habilitados)
 │   │   ├── Navbar.jsx           # Barra superior de navegación y acciones rápidas
-│   │   ├── ProfileModal.jsx     # Configuración laboral, cargo y receso diario
+│   │   ├── ProfileModal.jsx     # Configuración laboral, cargo, días laborables y almuerzos
 │   │   ├── ReportsModal.jsx     # Filtro de reportes, métricas y exportación PDF/CSV
 │   │   ├── WeekNavigator.jsx    # Selector semanal y barra de progreso de horas
-│   │   └── WeeklyGrid.jsx       # Tablero principal de 5 columnas (Lunes a Viernes)
+│   │   └── WeeklyGrid.jsx       # Una columna por día laborable, con bloques de almuerzo
 │   ├── utils/
 │   │   ├── csvExport.js         # Exportador de archivos CSV para Excel
-│   │   ├── dateUtils.js         # Cálculo de fechas y descuento implícito de receso
+│   │   ├── dateUtils.js         # Cálculo de fechas y horas por solapamiento
+│   │   ├── jornada.js           # Días laborables, reglas de almuerzo y migración de ajustes previos
 │   │   ├── pdfExport.js         # Generador de informes PDF con bloque de firmas
 │   │   └── storage.js           # Persistencia local, paletas y respaldos JSON
 │   ├── App.jsx                  # Componente raíz e inyección de variables CSS

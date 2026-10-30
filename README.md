@@ -8,7 +8,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 [![Español](https://img.shields.io/badge/Idioma-Espa%C3%B1ol-orange?style=for-the-badge)](README.es.md)
 
-Native desktop application for tracking Monday-to-Friday work and research activities, managing weekly hour targets, customizing visual and typographic themes, and generating signed PDF and CSV reports.
+Native desktop application for tracking work and research activities on a fully configurable workweek, managing weekly hour targets, customizing visual and typographic themes, and generating signed PDF and CSV reports.
 
 > **Language / Idioma:** English | [Leer documentación en Español](README.es.md)
 
@@ -30,8 +30,9 @@ Native desktop application for tracking Monday-to-Friday work and research activ
 
 ## Architectural & Functional Highlights
 
-- **Monday-to-Friday Workweek Board:** Full-viewport 5-column layout with quick-add controls per day, status toggles (`Completed` / `Pending`), and a monthly calendar popover that disables weekend dates.
-- **Implicit Daily Break Deduction:** Configurable daily break window (default `13:00` to `14:00`, `60` minutes). When an activity spans across the configured break interval (for example `08:00` to `17:00`), the calculator automatically subtracts the break duration and records `8h` of effective work without cluttering cards or exported reports.
+- **Configurable Workweek Board:** Choose which weekdays you work (any combination of Monday to Sunday). The board renders one full-height column per working day, with quick-add controls, status toggles (`Completed` / `Pending`), and a monthly calendar popover that disables non-working dates.
+- **Per-Day Lunch Schedules:** Define one or more lunch windows and assign each to a group of days (for example Monday to Wednesday `13:00` to `14:00`, the rest `12:00` to `12:30`). The lunch block appears automatically in every matching day of the calendar, so you never log it by hand, and its time is subtracted from any activity that crosses it (`08:00` to `17:00` with a one-hour lunch records `8h`).
+- **Requester Tracking:** Each activity can record who requested it, with suggestions drawn from previous entries. The requester is included in the weekly board, the report table, the PDF, and the CSV export.
 - **Weekly Quota Progress:** Inline and profile-level configuration for required weekly hours (`meta_horas_semanales`) with real-time completion metrics.
 - **Visual & Calligraphy Studio:**
   - Light and Dark themes.
@@ -74,15 +75,17 @@ activity-tracker-desktop/
 │   │   ├── ActivityModal.jsx    # Create/edit activity dialog with validation
 │   │   ├── AppearanceModal.jsx  # Theme, accent color & calligraphy studio
 │   │   ├── CatalogModal.jsx     # Custom activity category manager
-│   │   ├── MiniCalendar.jsx     # Monthly date picker (Mon-Fri enabled)
+│   │   ├── DayPicker.jsx        # Weekday toggle chips
+│   │   ├── MiniCalendar.jsx     # Monthly date picker (working days enabled)
 │   │   ├── Navbar.jsx           # Top navigation bar & quick actions
-│   │   ├── ProfileModal.jsx     # Workplace, role & implicit break settings
+│   │   ├── ProfileModal.jsx     # Workplace, role, working days & lunch schedules
 │   │   ├── ReportsModal.jsx     # Report filtering, KPI summary & PDF/CSV export
 │   │   ├── WeekNavigator.jsx    # Week selector & weekly hour progress bar
-│   │   └── WeeklyGrid.jsx       # 5-column Monday-to-Friday board
+│   │   └── WeeklyGrid.jsx       # One column per working day, with lunch blocks
 │   ├── utils/
 │   │   ├── csvExport.js         # Excel-compatible CSV generator
-│   │   ├── dateUtils.js         # Date arithmetic & implicit break hour math
+│   │   ├── dateUtils.js         # Date arithmetic & overlap-based hour math
+│   │   ├── jornada.js           # Working days, lunch rules & legacy settings migration
 │   │   ├── pdfExport.js         # Institutional PDF report builder
 │   │   └── storage.js           # Local persistence, palettes & JSON backup I/O
 │   ├── App.jsx                  # Root state orchestration & CSS variable injection
