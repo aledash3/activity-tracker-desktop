@@ -1,0 +1,190 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 660" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+    <filter id="winShadow" x="-2%" y="-2%" width="104%" height="106%">
+      <feDropShadow dx="0" dy="10" stdDeviation="16" flood-color="#020617" flood-opacity="0.45" />
+    </filter>
+  </defs>
+
+  <!-- Outer Canvas -->
+  <rect width="1200" height="660" rx="14" fill="url(#bgGrad)" />
+
+  <!-- Desktop Window Frame -->
+  <g filter="url(#winShadow)">
+    <rect x="28" y="24" width="1144" height="612" rx="10" fill="#f1f5f9" stroke="#334155" stroke-width="1.5" />
+
+    <!-- Native Window Titlebar -->
+    <path d="M28 34 C28 28.477 32.477 24 38 24 H1162 C1167.523 24 1172 28.477 1172 34 V56 H28 Z" fill="#0f172a" />
+    <rect x="44" y="33" width="14" height="14" rx="3" fill="#2563eb" />
+    <text x="66" y="44" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" font-weight="600" fill="#cbd5e1">Bitácora de Actividades</text>
+    <!-- Window Controls (Windows style) -->
+    <line x1="1088" y1="40" x2="1098" y2="40" stroke="#94a3b8" stroke-width="1.4" />
+    <rect x="1116" y="35" width="9" height="9" fill="none" stroke="#94a3b8" stroke-width="1.4" />
+    <line x1="1144" y1="35" x2="1153" y2="44" stroke="#ef4444" stroke-width="1.5" />
+    <line x1="1153" y1="35" x2="1144" y2="44" stroke="#ef4444" stroke-width="1.5" />
+
+    <!-- App Top Navbar -->
+    <rect x="28" y="56" width="1144" height="58" fill="#ffffff" />
+    <line x1="28" y1="114" x2="1172" y2="114" stroke="#cbd5e1" stroke-width="1" />
+
+    <!-- Brand -->
+    <rect x="48" y="67" width="36" height="36" rx="8" fill="#2563eb" />
+    <rect x="57" y="75" width="18" height="18" rx="3" fill="none" stroke="#ffffff" stroke-width="2" />
+    <line x1="57" y1="81" x2="75" y2="81" stroke="#ffffff" stroke-width="2" />
+    <text x="96" y="83" font-family="Segoe UI, Inter, sans-serif" font-size="15" font-weight="700" fill="#0f172a">Control de Actividades</text>
+    <text x="96" y="99" font-family="Segoe UI, Inter, sans-serif" font-size="11" font-weight="500" fill="#475569">Universidad Politécnica Salesiana · Grupo de Investigación IDEIAGEOCA</text>
+
+    <!-- Navbar Buttons -->
+    <rect x="580" y="69" width="136" height="32" rx="6" fill="#2563eb" />
+    <text x="648" y="89" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="12" font-weight="600" fill="#ffffff">+ Agregar actividad</text>
+
+    <rect x="724" y="69" width="84" height="32" rx="6" fill="#ffffff" stroke="#cbd5e1" />
+    <text x="766" y="89" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="12" font-weight="600" fill="#334155">Reportes</text>
+
+    <rect x="816" y="69" width="92" height="32" rx="6" fill="#ffffff" stroke="#cbd5e1" />
+    <text x="862" y="89" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="12" font-weight="600" fill="#334155">Categorías</text>
+
+    <rect x="916" y="69" width="70" height="32" rx="6" fill="#ffffff" stroke="#cbd5e1" />
+    <text x="951" y="89" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="12" font-weight="600" fill="#334155">Estilo</text>
+
+    <rect x="994" y="69" width="156" height="32" rx="6" fill="#f8fafc" stroke="#cbd5e1" />
+    <text x="1072" y="84" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="11" font-weight="700" fill="#0f172a">Configuración</text>
+    <text x="1072" y="96" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="9.5" fill="#64748b">Trabajo, cargo y horario</text>
+
+    <!-- Week Navigator & Weekly Quota Bar -->
+    <rect x="48" y="128" width="1104" height="58" rx="10" fill="#ffffff" stroke="#cbd5e1" />
+    <rect x="64" y="141" width="90" height="32" rx="6" fill="#eff6ff" stroke="#2563eb" />
+    <text x="109" y="161" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="12" font-weight="600" fill="#2563eb">Esta semana</text>
+
+    <rect x="166" y="139" width="210" height="36" rx="6" fill="#f8fafc" stroke="#cbd5e1" />
+    <text x="180" y="153" font-family="Segoe UI, Inter, sans-serif" font-size="9.5" font-weight="700" fill="#64748b">LUNES A VIERNES</text>
+    <text x="180" y="168" font-family="Segoe UI, Inter, sans-serif" font-size="12.5" font-weight="700" fill="#0f172a">26/10/2026 al 30/10/2026</text>
+
+    <!-- Progress Bar -->
+    <text x="710" y="147" font-family="Segoe UI, Inter, sans-serif" font-size="12" font-weight="600" fill="#334155">Horas en la semana: <tspan font-weight="700" fill="#0f172a">32h</tspan> de <tspan font-weight="700" fill="#0f172a">40h</tspan></text>
+    <rect x="1030" y="135" width="104" height="20" rx="5" fill="#eff6ff" stroke="#bfdbfe" />
+    <text x="1082" y="149" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="10.5" font-weight="600" fill="#2563eb">Meta: 40h/sem</text>
+
+    <rect x="710" y="155" width="424" height="8" rx="4" fill="#e2e8f0" />
+    <rect x="710" y="155" width="340" height="8" rx="4" fill="#2563eb" />
+    <text x="710" y="177" font-family="Segoe UI, Inter, sans-serif" font-size="10.5" fill="#64748b">Restan 8h para completar la semana</text>
+    <text x="1134" y="177" text-anchor="end" font-family="Segoe UI, Inter, sans-serif" font-size="10.5" font-weight="600" fill="#15803d">32h completadas (5 actividades)</text>
+
+    <!-- 5-Column Monday to Friday Grid -->
+    <!-- Column 1: Lunes -->
+    <g transform="translate(48, 198)">
+      <rect width="211" height="422" rx="10" fill="#ffffff" stroke="#cbd5e1" />
+      <line x1="0" y1="58" x2="211" y2="58" stroke="#cbd5e1" />
+      <text x="14" y="26" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#0f172a">Lunes</text>
+      <rect x="160" y="12" width="38" height="20" rx="5" fill="#dcfce7" />
+      <text x="179" y="26" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="11" font-weight="700" fill="#14532d">8h</text>
+      <text x="14" y="46" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" font-weight="600" fill="#64748b">26 Oct</text>
+
+      <rect x="10" y="70" width="191" height="122" rx="8" fill="#ffffff" stroke="#cbd5e1" />
+      <text x="20" y="90" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" font-weight="700" fill="#0f172a">08:00 - 17:00</text>
+      <rect x="164" y="77" width="28" height="18" rx="4" fill="#eff6ff" />
+      <text x="178" y="90" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="10.5" font-weight="700" fill="#2563eb">8h</text>
+      <text x="20" y="108" font-family="Segoe UI, Inter, sans-serif" font-size="10.5" font-weight="700" fill="#2563eb">Investigación</text>
+      <text x="20" y="126" font-family="Segoe UI, Inter, sans-serif" font-size="11" fill="#334155">Revisión sistemática de</text>
+      <text x="20" y="142" font-family="Segoe UI, Inter, sans-serif" font-size="11" fill="#334155">arquitecturas distribuidas</text>
+      <rect x="20" y="162" width="78" height="20" rx="4" fill="#dcfce7" />
+      <text x="59" y="176" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="10" font-weight="700" fill="#14532d">Completado</text>
+
+      <rect x="10" y="376" width="191" height="34" rx="6" fill="#f8fafc" stroke="#cbd5e1" />
+      <text x="105" y="397" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">+ Agregar actividad</text>
+    </g>
+
+    <!-- Column 2: Martes -->
+    <g transform="translate(271, 198)">
+      <rect width="211" height="422" rx="10" fill="#ffffff" stroke="#cbd5e1" />
+      <line x1="0" y1="58" x2="211" y2="58" stroke="#cbd5e1" />
+      <text x="14" y="26" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#0f172a">Martes</text>
+      <rect x="160" y="12" width="38" height="20" rx="5" fill="#dcfce7" />
+      <text x="179" y="26" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="11" font-weight="700" fill="#14532d">8h</text>
+      <text x="14" y="46" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" font-weight="600" fill="#64748b">27 Oct</text>
+
+      <rect x="10" y="70" width="191" height="122" rx="8" fill="#ffffff" stroke="#cbd5e1" />
+      <text x="20" y="90" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" font-weight="700" fill="#0f172a">08:00 - 17:00</text>
+      <rect x="164" y="77" width="28" height="18" rx="4" fill="#eff6ff" />
+      <text x="178" y="90" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="10.5" font-weight="700" fill="#2563eb">8h</text>
+      <text x="20" y="108" font-family="Segoe UI, Inter, sans-serif" font-size="10.5" font-weight="700" fill="#2563eb">Desarrollo</text>
+      <text x="20" y="126" font-family="Segoe UI, Inter, sans-serif" font-size="11" fill="#334155">Implementación de módulo</text>
+      <text x="20" y="142" font-family="Segoe UI, Inter, sans-serif" font-size="11" fill="#334155">de exportación en PDF</text>
+      <rect x="20" y="162" width="78" height="20" rx="4" fill="#dcfce7" />
+      <text x="59" y="176" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="10" font-weight="700" fill="#14532d">Completado</text>
+
+      <rect x="10" y="376" width="191" height="34" rx="6" fill="#f8fafc" stroke="#cbd5e1" />
+      <text x="105" y="397" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">+ Agregar actividad</text>
+    </g>
+
+    <!-- Column 3: Miércoles -->
+    <g transform="translate(494, 198)">
+      <rect width="211" height="422" rx="10" fill="#ffffff" stroke="#cbd5e1" />
+      <line x1="0" y1="58" x2="211" y2="58" stroke="#cbd5e1" />
+      <text x="14" y="26" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#0f172a">Miércoles</text>
+      <rect x="160" y="12" width="38" height="20" rx="5" fill="#dcfce7" />
+      <text x="179" y="26" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="11" font-weight="700" fill="#14532d">8h</text>
+      <text x="14" y="46" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" font-weight="600" fill="#64748b">28 Oct</text>
+
+      <rect x="10" y="70" width="191" height="122" rx="8" fill="#ffffff" stroke="#cbd5e1" />
+      <text x="20" y="90" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" font-weight="700" fill="#0f172a">08:00 - 17:00</text>
+      <rect x="164" y="77" width="28" height="18" rx="4" fill="#eff6ff" />
+      <text x="178" y="90" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="10.5" font-weight="700" fill="#2563eb">8h</text>
+      <text x="20" y="108" font-family="Segoe UI, Inter, sans-serif" font-size="10.5" font-weight="700" fill="#2563eb">Documentación</text>
+      <text x="20" y="126" font-family="Segoe UI, Inter, sans-serif" font-size="11" fill="#334155">Redacción de informe de</text>
+      <text x="20" y="142" font-family="Segoe UI, Inter, sans-serif" font-size="11" fill="#334155">avances semanales</text>
+      <rect x="20" y="162" width="78" height="20" rx="4" fill="#dcfce7" />
+      <text x="59" y="176" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="10" font-weight="700" fill="#14532d">Completado</text>
+
+      <rect x="10" y="376" width="191" height="34" rx="6" fill="#f8fafc" stroke="#cbd5e1" />
+      <text x="105" y="397" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">+ Agregar actividad</text>
+    </g>
+
+    <!-- Column 4: Jueves (HOY) -->
+    <g transform="translate(717, 198)">
+      <rect width="211" height="422" rx="10" fill="#f8faff" stroke="#2563eb" stroke-width="1.5" />
+      <line x1="0" y1="58" x2="211" y2="58" stroke="#cbd5e1" />
+      <text x="14" y="26" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#0f172a">Jueves</text>
+      <rect x="68" y="12" width="32" height="18" rx="4" fill="#2563eb" />
+      <text x="84" y="24" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="9.5" font-weight="700" fill="#ffffff">HOY</text>
+      <rect x="160" y="12" width="38" height="20" rx="5" fill="#dcfce7" />
+      <text x="179" y="26" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="11" font-weight="700" fill="#14532d">8h</text>
+      <text x="14" y="46" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" font-weight="600" fill="#64748b">29 Oct</text>
+
+      <rect x="10" y="70" width="191" height="122" rx="8" fill="#ffffff" stroke="#cbd5e1" />
+      <text x="20" y="90" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" font-weight="700" fill="#0f172a">08:00 - 17:00</text>
+      <rect x="164" y="77" width="28" height="18" rx="4" fill="#eff6ff" />
+      <text x="178" y="90" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="10.5" font-weight="700" fill="#2563eb">8h</text>
+      <text x="20" y="108" font-family="Segoe UI, Inter, sans-serif" font-size="10.5" font-weight="700" fill="#2563eb">Experimentación</text>
+      <text x="20" y="126" font-family="Segoe UI, Inter, sans-serif" font-size="11" fill="#334155">Validación de métricas y</text>
+      <text x="20" y="142" font-family="Segoe UI, Inter, sans-serif" font-size="11" fill="#334155">generación de respaldo</text>
+      <rect x="20" y="162" width="78" height="20" rx="4" fill="#dcfce7" />
+      <text x="59" y="176" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="10" font-weight="700" fill="#14532d">Completado</text>
+
+      <rect x="10" y="376" width="191" height="34" rx="6" fill="#f8fafc" stroke="#cbd5e1" />
+      <text x="105" y="397" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">+ Agregar actividad</text>
+    </g>
+
+    <!-- Column 5: Viernes -->
+    <g transform="translate(940, 198)">
+      <rect width="211" height="422" rx="10" fill="#ffffff" stroke="#cbd5e1" />
+      <line x1="0" y1="58" x2="211" y2="58" stroke="#cbd5e1" />
+      <text x="14" y="26" font-family="Segoe UI, Inter, sans-serif" font-size="14" font-weight="700" fill="#0f172a">Viernes</text>
+      <rect x="160" y="12" width="38" height="20" rx="5" fill="#f8fafc" stroke="#cbd5e1" />
+      <text x="179" y="26" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="11" font-weight="700" fill="#64748b">0h</text>
+      <text x="14" y="46" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" font-weight="600" fill="#64748b">30 Oct</text>
+
+      <rect x="10" y="70" width="191" height="294" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-dasharray="4 4" />
+      <text x="105" y="198" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="20" font-weight="600" fill="#2563eb">+</text>
+      <text x="105" y="218" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="12" font-weight="600" fill="#334155">Sin actividades</text>
+      <text x="105" y="235" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="10.5" fill="#64748b">Haz clic para agregar una</text>
+      <text x="105" y="249" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="10.5" fill="#64748b">actividad en este día</text>
+
+      <rect x="10" y="376" width="191" height="34" rx="6" fill="#f8fafc" stroke="#cbd5e1" />
+      <text x="105" y="397" text-anchor="middle" font-family="Segoe UI, Inter, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">+ Agregar actividad</text>
+    </g>
+  </g>
+</svg>
