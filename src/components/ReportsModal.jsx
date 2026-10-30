@@ -1,4 +1,4 @@
-﻿import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   X,
   Download,
@@ -7,6 +7,7 @@ import {
   CheckCircle2,
   AlertCircle,
   FileSpreadsheet,
+  FileText,
   ListChecks,
 } from "lucide-react";
 import {
@@ -19,6 +20,7 @@ import {
 import { diasVisiblesSemana, etiquetaDias, horasActividad } from "../utils/jornada";
 import { generarPDFReporte } from "../utils/pdfExport";
 import { exportarCSV } from "../utils/csvExport";
+import { exportarExcelActividades } from "../utils/fileIo";
 
 export default function ReportsModal({
   perfil,
@@ -28,90 +30,80 @@ export default function ReportsModal({
   fechaReferencia,
   onCerrar,
 }) {
-  const [tipoReporte, setTipoReporte] = useState("semana"); // "dia" | "semana" | "mes" | "periodo"
+  const [tipoReporte, setTipoReporte] = useState("semana");
   const [fechaBase, setFechaBase] = useState(fechaReferencia || hoyISO());
   const [desdePersonalizado, setDesdePersonalizado] = useState(
-    lunesDe(hoyISO())
+    lunesDe(fechaReferencia || hoyISO())
   );
-  const [hastaPersonalizado, setHastaPersonalizado] = useState(hoyISO());
+  const [hastaPersonalizado, setHastaPersonalizado] = useState(fechaReferencia || hoyISO());
 
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "Escape") onCerrar();
     };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [onCerrar]);
 
-  const { desde, hasta, tituloPeriodo, rangoTexto } = useMemo(() => {
+  const { actividadesFiltradas, tituloPeriodo, rangoTexto } = useMemo(() => {
+    let filtradas = [];
+    let titulo = "";
+    let rango = "";
+
     if (tipoReporte === "dia") {
-      return {
-        desde: fechaBase,
-        hasta: fechaBase,
-        tituloPeriodo: `Reporte Diario (${formatearFechaCorta(fechaBase)})`,
-        rangoTexto: formatearFechaTexto(fechaBase),
-      };
-    }
-    if (tipoReporte === "semana") {
-      const dias = diasVisiblesSemana(
-        lunesDe(fechaBase),
-        jornada,
-        new Set(actividades.map((a) => a.fecha))
-      );
-      const primero = dias[0];
-      const ultimo = dias[dias.length - 1];
-      return {
-        desde: primero,
-        hasta: ultimo,
-        tituloPeriodo: `Reporte Semanal (${etiquetaDias(jornada.dias)})`,
-        rangoTexto:
-          primero === ultimo
-            ? formatearFechaCorta(primero)
-            : `Del ${formatearFechaCorta(primero)} al ${formatearFechaCorta(ultimo)}`,
-      };
-    }
-    if (tipoReporte === "mes") {
-      const [y, m] = fechaBase.split("-").map(Number);
-      const primerDia = `${y}-${String(m).padStart(2, "0")}-01`;
-      const ultimoDiaNum = new Date(y, m, 0).getDate();
-      const ultimoDia = `${y}-${String(m).padStart(2, "0")}-${String(ultimoDiaNum).padStart(2, "0")}`;
-      const nombreMes = new Date(y, m - 1, 1).toLocaleDateString("es-EC", {
+      filtradas = actividades.filter((a) => a.fecha === fechaBase);
+      titulo = `Reporte Diario · ${formatearFechaTexto(fechaBase)}`;
+      rango = formatearFechaCorta(fechaBase);
+    } else if (tipoReporte === "semana") {
+      const lunes = lunesDe(fechaBase);
+      const fechasSemana = diasVisiblesSemana(lunes, jornada, []);
+      const inicio = fechasSemana[0];
+      const fin = fechasSemana[fechasSemana.length - 1];
+
+      filtradas = actividades.filter((a) => a.fecha >= inicio && a.fecha <= fin);
+      titulo = `Reporte Semanal (${etiquetaDias(jornada.dias)})`;
+      rango = `Del ${formatearFechaCorta(inicio)} al ${formatearFechaCorta(fin)}`;
+    } else if (tipoReporte === "mes") {
+      const año = fechaBase.slice(0, 4);
+      const mes = fechaBase.slice(5, 7);
+      filtradas = actividades.filter((a) => a.fecha.startsWith(`${año}-${mes}`));
+
+      const fechaObj = new Date(`${año}-${mes}-02T00:00:00`);
+      const nombreMes = fechaObj.toLocaleDateString("es-ES", {
         month: "long",
         year: "numeric",
       });
-      return {
-        desde: primerDia,
-        hasta: ultimoDia,
-        tituloPeriodo: `Reporte Mensual (${nombreMes.toUpperCase()})`,
-        rangoTexto: `Del 01 al ${ultimoDiaNum} de ${nombreMes}`,
-      };
-    }
-    return {
-      desde: desdePersonalizado,
-      hasta: hastaPersonalizado,
-      tituloPeriodo: "Reporte por Periodo",
-      rangoTexto: `Del ${formatearFechaCorta(desdePersonalizado)} al ${formatearFechaCorta(hastaPersonalizado)}`,
-    };
-  }, [tipoReporte, fechaBase, desdePersonalizado, hastaPersonalizado, jornada, actividades]);
+      titulo = `Reporte Mensual · ${nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1)}`;
+      rango = `Mes completo (${año}-${mes})`;
+    } else if (tipoReporte === "periodo") {
+      const inicio = desdePersonalizado <= hastaPersonalizado ? desdePersonalizado : hastaPersonalizado;
+      const fin = desdePersonalizado <= hastaPersonalizado ? hastaPersonalizado : desdePersonalizado;
 
-  const actividadesFiltradas = useMemo(() => {
-    return actividades
-      .filter((a) => a.fecha >= desde && a.fecha <= hasta)
-      .sort(
-        (a, b) =>
-          a.fecha.localeCompare(b.fecha) ||
-          (a.hora_inicio || "").localeCompare(b.hora_inicio || "")
-      );
-  }, [actividades, desde, hasta]);
+      filtradas = actividades.filter((a) => a.fecha >= inicio && a.fecha <= fin);
+      titulo = "Reporte por Periodo";
+      rango = `Del ${formatearFechaCorta(inicio)} al ${formatearFechaCorta(fin)}`;
+    }
+
+    filtradas.sort((a, b) => {
+      if (a.fecha !== b.fecha) return a.fecha.localeCompare(b.fecha);
+      return (a.hora_inicio || "").localeCompare(b.hora_inicio || "");
+    });
+
+    return {
+      actividadesFiltradas: filtradas,
+      tituloPeriodo: titulo,
+      rangoTexto: rango,
+    };
+  }, [tipoReporte, fechaBase, desdePersonalizado, hastaPersonalizado, actividades, jornada]);
 
   const metricas = useMemo(() => {
     let totalHoras = 0;
     let horasCompletadas = 0;
 
-    actividadesFiltradas.forEach((a) => {
-      const h = horasActividad(a, jornada);
+    actividadesFiltradas.forEach((act) => {
+      const h = horasActividad(act, jornada);
       totalHoras += h;
-      if (a.estado === "completado") horasCompletadas += h;
+      if (act.estado === "completado") horasCompletadas += h;
     });
 
     const metaSemanal = Number(perfil.meta_horas_semanales) || 0;
@@ -124,24 +116,45 @@ export default function ReportsModal({
     };
   }, [actividadesFiltradas, jornada, perfil.meta_horas_semanales]);
 
-  const descargarPDF = () => {
-    generarPDFReporte({
-      perfil,
-      colorAcento,
-      tituloPeriodo,
-      rangoTexto,
-      jornada,
-      actividades: actividadesFiltradas,
-    });
+  const descargarPDF = async () => {
+    try {
+      await generarPDFReporte({
+        perfil,
+        colorAcento,
+        tituloPeriodo,
+        rangoTexto,
+        jornada,
+        actividades: actividadesFiltradas,
+      });
+    } catch (err) {
+      alert("Error al generar PDF: " + err.message);
+    }
   };
 
-  const descargarCSV = () => {
-    exportarCSV({
-      perfil,
-      tituloPeriodo,
-      jornada,
-      actividades: actividadesFiltradas,
-    });
+  const descargarExcel = async () => {
+    try {
+      await exportarExcelActividades({
+        perfil,
+        jornada,
+        actividades: actividadesFiltradas,
+        tituloPeriodo,
+      });
+    } catch (err) {
+      alert("Error al exportar a Excel: " + err.message);
+    }
+  };
+
+  const descargarCSV = async () => {
+    try {
+      await exportarCSV({
+        perfil,
+        tituloPeriodo,
+        jornada,
+        actividades: actividadesFiltradas,
+      });
+    } catch (err) {
+      alert("Error al exportar CSV: " + err.message);
+    }
   };
 
   return (
@@ -275,6 +288,7 @@ export default function ReportsModal({
                 className="btn btn-primary btn-sm"
                 onClick={descargarPDF}
                 disabled={actividadesFiltradas.length === 0}
+                title="Generar y guardar reporte en PDF formal con firmas"
               >
                 <Download size={15} />
                 <span>Descargar PDF</span>
@@ -283,11 +297,23 @@ export default function ReportsModal({
               <button
                 type="button"
                 className="btn btn-outline btn-sm"
-                onClick={descargarCSV}
+                onClick={descargarExcel}
                 disabled={actividadesFiltradas.length === 0}
+                title="Descargar libro estructurado de Microsoft Excel (.xlsx)"
               >
                 <FileSpreadsheet size={15} />
-                <span>Exportar CSV (Excel)</span>
+                <span>Exportar Excel (.xlsx)</span>
+              </button>
+
+              <button
+                type="button"
+                className="btn btn-outline btn-sm"
+                onClick={descargarCSV}
+                disabled={actividadesFiltradas.length === 0}
+                title="Exportar archivo de texto CSV delimitado"
+              >
+                <FileText size={15} />
+                <span>Exportar CSV</span>
               </button>
 
               <button
@@ -376,13 +402,11 @@ export default function ReportsModal({
                         <td>
                           <strong>{formatearFechaCorta(act.fecha)}</strong>
                         </td>
-                        <td style={{ whiteSpace: "nowrap" }}>
-                          {act.hora_inicio} - {act.hora_fin}
+                        <td>
+                          {act.hora_inicio || "--:--"} - {act.hora_fin || "--:--"}
                         </td>
                         <td>
-                          <strong>
-                            {horasActividad(act, jornada)}h
-                          </strong>
+                          <strong>{horasActividad(act, jornada)}h</strong>
                         </td>
                         <td>{act.categoria || "-"}</td>
                         <td>{act.solicitante || "-"}</td>
@@ -392,11 +416,13 @@ export default function ReportsModal({
                           <span
                             className={`badge-status ${
                               act.estado === "completado"
-                                ? "badge-status-done"
-                                : "badge-status-pending"
+                                ? "badge-completed"
+                                : act.estado === "en_progreso"
+                                  ? "badge-in-progress"
+                                  : "badge-pending"
                             }`}
                           >
-                            {act.estado === "completado" ? "COMPLETADO" : "PENDIENTE"}
+                            {(act.estado || "completado").toUpperCase()}
                           </span>
                         </td>
                       </tr>
@@ -414,9 +440,20 @@ export default function ReportsModal({
           </button>
           <button
             type="button"
+            className="btn btn-outline"
+            onClick={descargarExcel}
+            disabled={actividadesFiltradas.length === 0}
+            title="Descargar libro de Microsoft Excel (.xlsx)"
+          >
+            <FileSpreadsheet size={15} />
+            <span>Descargar Excel</span>
+          </button>
+          <button
+            type="button"
             className="btn btn-primary"
             onClick={descargarPDF}
             disabled={actividadesFiltradas.length === 0}
+            title="Descargar reporte en documento PDF"
           >
             <Download size={16} />
             <span>Descargar PDF</span>

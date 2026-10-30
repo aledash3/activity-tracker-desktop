@@ -1,23 +1,16 @@
-﻿import { hoyISO } from "./dateUtils";
+import { hoyISO } from "./dateUtils";
 import { DIAS_LABORABLES_DEFAULT, migrarJornadaLegacy } from "./jornada";
+import {
+  DEFAULT_ACTIVIDADES_SEMANA,
+  DEFAULT_PERFIL_USUARIO,
+  DEFAULT_APARIENCIA_USUARIO,
+} from "./initialData";
+import { guardarArchivoNativo } from "./fileIo";
 
 const KEY_ACTIVIDADES = "bitacora_actividades_data_v3";
 const KEY_PERFIL = "bitacora_actividades_perfil_v3";
 const KEY_CATEGORIAS = "bitacora_actividades_categorias_v3";
 const KEY_APARIENCIA = "bitacora_actividades_apariencia_v3";
-
-// Limpiar claves de versiones previas para iniciar completamente en blanco
-try {
-  localStorage.removeItem("actividades_personal_data_v1");
-  localStorage.removeItem("actividades_personal_perfil_v1");
-  localStorage.removeItem("actividades_personal_tipos_v1");
-  localStorage.removeItem("registro_actividades_data_v2");
-  localStorage.removeItem("registro_actividades_perfil_v2");
-  localStorage.removeItem("registro_actividades_categorias_v2");
-  localStorage.removeItem("registro_actividades_tema_v2");
-} catch {
-  // Ignorar si localStorage no está disponible
-}
 
 export const PALETAS_COLOR = [
   { id: "cobalto", nombre: "Azul Cobalto", hex: "#2563eb" },
@@ -96,11 +89,17 @@ export const APARIENCIA_DEFAULT = {
 export const cargarActividades = () => {
   try {
     const raw = localStorage.getItem(KEY_ACTIVIDADES);
-    if (!raw) return [];
+    if (!raw) {
+      if (DEFAULT_ACTIVIDADES_SEMANA && DEFAULT_ACTIVIDADES_SEMANA.length > 0) {
+        guardarActividades(DEFAULT_ACTIVIDADES_SEMANA);
+        return [...DEFAULT_ACTIVIDADES_SEMANA];
+      }
+      return [];
+    }
     const parsed = JSON.parse(raw);
     return Array.isArray(parsed) ? parsed : [];
   } catch {
-    return [];
+    return DEFAULT_ACTIVIDADES_SEMANA ? [...DEFAULT_ACTIVIDADES_SEMANA] : [];
   }
 };
 
@@ -117,10 +116,16 @@ const normalizarPerfil = (perfil) => ({ ...PERFIL_VACIO, ...migrarJornadaLegacy(
 export const cargarPerfil = () => {
   try {
     const raw = localStorage.getItem(KEY_PERFIL);
-    if (!raw) return { ...PERFIL_VACIO };
+    if (!raw) {
+      if (DEFAULT_PERFIL_USUARIO && DEFAULT_PERFIL_USUARIO.nombre) {
+        guardarPerfil(DEFAULT_PERFIL_USUARIO);
+        return normalizarPerfil(DEFAULT_PERFIL_USUARIO);
+      }
+      return { ...PERFIL_VACIO };
+    }
     return normalizarPerfil(JSON.parse(raw));
   } catch {
-    return { ...PERFIL_VACIO };
+    return normalizarPerfil(DEFAULT_PERFIL_USUARIO || PERFIL_VACIO);
   }
 };
 
@@ -154,10 +159,16 @@ export const guardarCategorias = (categorias) => {
 export const cargarApariencia = () => {
   try {
     const raw = localStorage.getItem(KEY_APARIENCIA);
-    if (!raw) return { ...APARIENCIA_DEFAULT };
+    if (!raw) {
+      if (DEFAULT_APARIENCIA_USUARIO) {
+        guardarApariencia(DEFAULT_APARIENCIA_USUARIO);
+        return { ...DEFAULT_APARIENCIA_USUARIO };
+      }
+      return { ...APARIENCIA_DEFAULT };
+    }
     return { ...APARIENCIA_DEFAULT, ...JSON.parse(raw) };
   } catch {
-    return { ...APARIENCIA_DEFAULT };
+    return { ...DEFAULT_APARIENCIA_USUARIO };
   }
 };
 
@@ -169,7 +180,7 @@ export const guardarApariencia = (apariencia) => {
   }
 };
 
-export const exportarBackupJSON = () => {
+export const exportarBackupJSON = async () => {
   const data = {
     version: "3.1",
     fecha_exportacion: new Date().toISOString(),
@@ -179,15 +190,15 @@ export const exportarBackupJSON = () => {
     actividades: cargarActividades(),
   };
 
-  const blob = new Blob([JSON.stringify(data, null, 2)], {
-    type: "application/json",
+  const nombreArchivo = `respaldo_actividades_${hoyISO()}.json`;
+
+  return await guardarArchivoNativo({
+    nombreSugerido: nombreArchivo,
+    contenido: JSON.stringify(data, null, 2),
+    mimeType: "application/json",
+    extension: "json",
+    descripcionFiltro: "Copia de Seguridad JSON",
   });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `respaldo_actividades_${hoyISO()}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
 };
 
 export const importarBackupJSON = (file) => {

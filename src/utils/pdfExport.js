@@ -1,7 +1,8 @@
-﻿import jsPDF from "jspdf";
+import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { formatearFechaCorta, formatearFechaTexto } from "./dateUtils";
 import { horasActividad } from "./jornada";
+import { guardarArchivoNativo } from "./fileIo";
 
 const hexToRgb = (hex) => {
   const clean = (hex || "#2563eb").replace("#", "");
@@ -10,13 +11,13 @@ const hexToRgb = (hex) => {
   return [(num >> 16) & 255, (num >> 8) & 255, num & 255];
 };
 
-export const generarPDFReporte = ({
-  perfil,
+export const generarPDFReporte = async ({
+  perfil = {},
   colorAcento,
   tituloPeriodo,
   rangoTexto,
   jornada,
-  actividades,
+  actividades = [],
 }) => {
   const doc = new jsPDF({
     orientation: "portrait",
@@ -252,5 +253,15 @@ export const generarPDFReporte = ({
     .trim()
     .replace(/\s+/g, "_")
     .toLowerCase();
-  doc.save(`reporte_${nombreLimpio}_${new Date().toISOString().slice(0, 10)}.pdf`);
+
+  const nombreArchivo = `reporte_${nombreLimpio}_${new Date().toISOString().slice(0, 10)}.pdf`;
+  const arrayBuffer = doc.output("arraybuffer");
+
+  return await guardarArchivoNativo({
+    nombreSugerido: nombreArchivo,
+    contenido: arrayBuffer,
+    mimeType: "application/pdf",
+    extension: "pdf",
+    descripcionFiltro: "Documento de Reporte en PDF",
+  });
 };

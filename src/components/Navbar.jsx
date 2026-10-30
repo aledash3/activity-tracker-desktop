@@ -10,26 +10,31 @@ import {
   Palette,
   Sun,
   Moon,
+  ZoomIn,
+  ZoomOut,
 } from "lucide-react";
 
 export default function Navbar({
   perfil,
   tema,
+  zoom = 100,
   onToggleTema,
+  onCambiarZoom,
+  onResetearZoom,
   onNuevaActividad,
   onAbrirReportes,
   onAbrirApariencia,
   onAbrirPerfil,
   onAbrirCatalogos,
-  onExportarBackup,
-  onImportarBackup,
+  onAbrirDescarga,
+  onImportarArchivo,
 }) {
   const fileInputRef = React.useRef(null);
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
     if (file) {
-      onImportarBackup(file);
+      onImportarArchivo(file);
       e.target.value = "";
     }
   };
@@ -123,14 +128,14 @@ export default function Navbar({
             </div>
           </button>
 
-          {/* Respaldo JSON */}
-          <div className="backup-buttons" role="group" aria-label="Respaldo de datos">
+          {/* Botones de Descarga y Carga (Exportar e Importar) */}
+          <div className="backup-buttons" role="group" aria-label="Descargar y cargar datos">
             <button
               type="button"
               className="btn btn-outline btn-icon-only"
-              onClick={onExportarBackup}
-              title="Exportar respaldo (JSON)"
-              aria-label="Exportar respaldo (JSON)"
+              onClick={onAbrirDescarga}
+              title="Descargar actividades (.xlsx, .pdf, .csv, .json)"
+              aria-label="Descargar actividades (.xlsx, .pdf, .csv, .json)"
             >
               <Download size={15} />
             </button>
@@ -138,18 +143,51 @@ export default function Navbar({
               type="button"
               className="btn btn-outline btn-icon-only"
               onClick={() => fileInputRef.current?.click()}
-              title="Importar respaldo (JSON)"
-              aria-label="Importar respaldo (JSON)"
+              title="Cargar / Importar archivo (.xlsx, .csv, .json)"
+              aria-label="Cargar / Importar archivo (.xlsx, .csv, .json)"
             >
               <Upload size={15} />
             </button>
             <input
               ref={fileInputRef}
               type="file"
-              accept=".json"
+              accept=".xlsx,.xls,.csv,.json"
               style={{ display: "none" }}
               onChange={handleFileChange}
             />
+          </div>
+
+          {/* Controles de Zoom Variable */}
+          <div className="zoom-controls" role="group" aria-label="Control de Zoom">
+            <button
+              type="button"
+              className="btn btn-outline btn-icon-only btn-zoom"
+              onClick={() => onCambiarZoom(-5)}
+              title="Reducir zoom (Ctrl + Rueda abajo)"
+              aria-label="Reducir zoom"
+              disabled={zoom <= 70}
+            >
+              <ZoomOut size={13} />
+            </button>
+            <button
+              type="button"
+              className="zoom-indicator-btn"
+              onClick={onResetearZoom}
+              title="Restablecer zoom al 100%"
+              aria-label={`Zoom: ${zoom}%. Clic para restablecer al 100%`}
+            >
+              {zoom}%
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline btn-icon-only btn-zoom"
+              onClick={() => onCambiarZoom(5)}
+              title="Aumentar zoom (Ctrl + Rueda arriba)"
+              aria-label="Aumentar zoom"
+              disabled={zoom >= 160}
+            >
+              <ZoomIn size={13} />
+            </button>
           </div>
 
           {/* Botón rápido Modo Claro / Oscuro */}

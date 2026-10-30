@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import Navbar from "./components/Navbar";
 import WeekNavigator from "./components/WeekNavigator";
 import WeeklyGrid from "./components/WeeklyGrid";
@@ -7,6 +7,7 @@ import ReportsModal from "./components/ReportsModal";
 import ProfileModal from "./components/ProfileModal";
 import CatalogModal from "./components/CatalogModal";
 import AppearanceModal from "./components/AppearanceModal";
+import ExportModal from "./components/ExportModal";
 
 import {
   cargarActividades,
@@ -18,9 +19,9 @@ import {
   cargarApariencia,
   guardarApariencia,
   OPCIONES_CALIGRAFIA,
-  exportarBackupJSON,
-  importarBackupJSON,
 } from "./utils/storage";
+
+import { importarArchivoCualquiera } from "./utils/fileIo";
 
 import { hoyISO, lunesDe } from "./utils/dateUtils";
 import {
@@ -50,6 +51,49 @@ export default function App() {
   const [categorias, setCategorias] = useState(cargarCategorias);
   const [apariencia, setApariencia] = useState(cargarApariencia);
 
+  // Zoom variable persistido
+  const [zoom, setZoom] = useState(() => {
+    try {
+      const guardado = localStorage.getItem("bitacora_zoom_level");
+      const num = Number(guardado);
+      if (num >= 70 && num <= 160) return num;
+    } catch {
+      // Ignorar
+    }
+    return 100;
+  });
+
+  const cambiarZoom = useCallback((delta) => {
+    setZoom((prev) => Math.min(160, Math.max(70, prev + delta)));
+  }, []);
+
+  const resetearZoom = useCallback(() => {
+    setZoom(100);
+  }, []);
+
+  // Aplicar zoom dinámico en el elemento raíz
+  useEffect(() => {
+    document.documentElement.style.zoom = `${zoom / 100}`;
+    try {
+      localStorage.setItem("bitacora_zoom_level", String(zoom));
+    } catch {
+      // Ignorar
+    }
+  }, [zoom]);
+
+  // Listener para Ctrl + rueda del ratón
+  useEffect(() => {
+    const handleWheel = (e) => {
+      if (e.ctrlKey) {
+        e.preventDefault();
+        const delta = e.deltaY < 0 ? 5 : -5;
+        setZoom((prev) => Math.min(160, Math.max(70, prev + delta)));
+      }
+    };
+    window.addEventListener("wheel", handleWheel, { passive: false });
+    return () => window.removeEventListener("wheel", handleWheel);
+  }, []);
+
   const jornada = useMemo(
     () => jornadaDePerfil({ dias_laborables: perfil.dias_laborables, recesos: perfil.recesos }),
     [perfil.dias_laborables, perfil.recesos]
@@ -68,6 +112,7 @@ export default function App() {
   const [fechaParaNueva, setFechaParaNueva] = useState(hoy);
 
   const [modalReportes, setModalReportes] = useState(false);
+  const [modalDescarga, setModalDescarga] = useState(false);
   const [modalApariencia, setModalApariencia] = useState(false);
   const [modalPerfil, setModalPerfil] = useState(false);
   const [modalCatalogos, setModalCatalogos] = useState(false);
@@ -100,54 +145,48 @@ export default function App() {
     const fontObj =
       OPCIONES_CALIGRAFIA.find((f) => f.id === apariencia.fuente) ||
       OPCIONES_CALIGRAFIA[0];
-    root.style.setProperty("--font-sans", fontObj.css);
+    root.style.setProperty("--font-primary", fontObj.css);
 
-    const escala =
-      apariencia.tamanoFuente === "compacto"
-        ? "14px"
-        : apariencia.tamanoFuente === "grande"
-        ? "17px"
-        : "15.5px";
-    root.style.fontSize = escala;
+    let baseSize = "15px";
+    if (apariencia.tamanoFuente === "compacto") baseSize = "13.5px";
+    if (apariencia.tamanoFuente === "comodo") baseSize = "16.5px";
+    root.style.setProperty("--font-base-size", baseSize);
+
+    let radiusSm = "4px";
+    let radiusMd = "8px";
+    let radiusLg = "12px";
 
     if (apariencia.bordes === "recto") {
-      root.style.setProperty("--radius-lg", "2px");
-      root.style.setProperty("--radius-md", "2px");
-      root.style.setProperty("--radius-sm", "2px");
+      radiusSm = "1px";
+      radiusMd = "2px";
+      radiusLg = "3px";
     } else if (apariencia.bordes === "redondeado") {
-      root.style.setProperty("--radius-lg", "16px");
-      root.style.setProperty("--radius-md", "12px");
-      root.style.setProperty("--radius-sm", "8px");
-    } else {
-      root.style.setProperty("--radius-lg", "10px");
-      root.style.setProperty("--radius-md", "8px");
-      root.style.setProperty("--radius-sm", "6px");
+      radiusSm = "8px";
+      radiusMd = "14px";
+      radiusLg = "20px";
     }
 
-    guardarApariencia(apariencia);
+    root.style.setProperty("--radius-sm", radiusSm);
+    root.style.setProperty("--radius-md", radiusMd);
+    root.style.setProperty("--radius-lg", radiusLg);
   }, [apariencia]);
 
-  useEffect(() => {
-    guardarActividades(actividades);
-  }, [actividades]);
-
-  useEffect(() => {
-    guardarPerfil(perfil);
-  }, [perfil]);
-
-  useEffect(() => {
-    guardarCategorias(categorias);
-  }, [categorias]);
-
   const toggleTema = () => {
-    setApariencia((prev) => ({
-      ...prev,
-      tema: prev.tema === "dark" ? "light" : "dark",
-    }));
+    const nuevoTema = apariencia.tema === "dark" ? "light" : "dark";
+    const nueva = { ...apariencia, tema: nuevoTema };
+    setApariencia(nueva);
+    guardarApariencia(nueva);
   };
 
   const fechasConActividades = useMemo(() => {
     return new Set(actividades.map((a) => a.fecha));
+  }, [actividades]);
+
+  const solicitantes = useMemo(() => {
+    const nombres = actividades
+      .map((a) => a.solicitante?.trim())
+      .filter(Boolean);
+    return [...new Set(nombres)].sort();
   }, [actividades]);
 
   const diasVisibles = useMemo(
@@ -155,43 +194,33 @@ export default function App() {
     [lunesActual, jornada, fechasConActividades]
   );
 
-  const solicitantes = useMemo(() => {
-    const todos = actividades.map((a) => a.solicitante).filter(Boolean);
-    if (perfil.supervisor?.trim()) todos.push(perfil.supervisor.trim());
-    return [...new Set(todos)].sort((a, b) => a.localeCompare(b));
-  }, [actividades, perfil.supervisor]);
-
   const metricasSemana = useMemo(() => {
-    const actividadesSemana = actividades.filter((a) =>
-      diasVisibles.includes(a.fecha)
-    );
+    const fechasSet = new Set(diasVisibles);
+    const delRango = actividades.filter((a) => fechasSet.has(a.fecha));
 
-    let horasTotales = 0;
+    let totalHoras = 0;
     let horasCompletadas = 0;
 
-    actividadesSemana.forEach((a) => {
-      const h = horasActividad(a, jornada);
-      horasTotales += h;
-      if (a.estado === "completado") {
-        horasCompletadas += h;
-      }
+    delRango.forEach((act) => {
+      const h = horasActividad(act, jornada);
+      totalHoras += h;
+      if (act.estado === "completado") horasCompletadas += h;
     });
 
     return {
-      totalActividades: actividadesSemana.length,
-      horasTotales,
+      totalHoras,
       horasCompletadas,
+      cantidadActividades: delRango.length,
     };
   }, [actividades, diasVisibles, jornada]);
-  const handleSeleccionarFechaCalendario = (iso) => {
-    setFechaSeleccionada(iso);
-    setLunesActual(lunesDe(iso));
+
+  const handleSeleccionarFechaCalendario = (fecha) => {
+    setFechaSeleccionada(fecha);
+    setLunesActual(lunesDe(fecha));
   };
 
-  const handleNuevaActividad = (fecha = null) => {
-    const fechaObjetivo =
-      typeof fecha === "string" && fecha ? fecha : fechaSeleccionada || hoy;
-    setFechaParaNueva(fechaObjetivo);
+  const handleNuevaActividad = (fechaSugerida) => {
+    setFechaParaNueva(fechaSugerida || fechaSeleccionada || hoy);
     setActividadEditando(null);
     setModalActividad(true);
   };
@@ -202,55 +231,101 @@ export default function App() {
     setModalActividad(true);
   };
 
-  const handleGuardarActividad = (actividadGuardada) => {
+  const handleGuardarActividad = (datos) => {
+    let nuevas;
     if (actividadEditando) {
-      setActividades((prev) =>
-        prev.map((a) =>
-          a.id === actividadGuardada.id ? actividadGuardada : a
-        )
+      nuevas = actividades.map((a) =>
+        a.id === actividadEditando.id ? { ...datos, id: a.id } : a
       );
       mostrarNotificacion("Actividad actualizada");
     } else {
-      setActividades((prev) => [...prev, actividadGuardada]);
+      const nueva = {
+        ...datos,
+        id: `act-${Date.now()}`,
+      };
+      nuevas = [...actividades, nueva];
       mostrarNotificacion("Actividad agregada");
     }
+
+    setActividades(nuevas);
+    guardarActividades(nuevas);
     setModalActividad(false);
     setActividadEditando(null);
+
+    if (datos.fecha) {
+      setFechaSeleccionada(datos.fecha);
+      setLunesActual(lunesDe(datos.fecha));
+    }
   };
 
   const handleEliminarActividad = (id) => {
-    if (window.confirm("¿Deseas eliminar esta actividad?")) {
-      setActividades((prev) => prev.filter((a) => a.id !== id));
-      mostrarNotificacion("Actividad eliminada");
-    }
+    const nuevas = actividades.filter((a) => a.id !== id);
+    setActividades(nuevas);
+    guardarActividades(nuevas);
+    mostrarNotificacion("Actividad eliminada");
   };
 
-  const handleToggleEstado = (id, nuevoEstado) => {
-    setActividades((prev) =>
-      prev.map((a) => (a.id === id ? { ...a, estado: nuevoEstado } : a))
+  const handleToggleEstado = (id) => {
+    const act = actividades.find((a) => a.id === id);
+    if (!act) return;
+
+    const estados = ["pendiente", "en_progreso", "completado"];
+    const actualIdx = estados.indexOf(act.estado || "completado");
+    const siguiente = estados[(actualIdx + 1) % estados.length];
+
+    const nuevas = actividades.map((a) =>
+      a.id === id ? { ...a, estado: siguiente } : a
     );
+    setActividades(nuevas);
+    guardarActividades(nuevas);
+
+    const nombresEstados = {
+      completado: "Completada",
+      en_progreso: "En progreso",
+      pendiente: "Pendiente",
+    };
+    mostrarNotificacion(`Estado: ${nombresEstados[siguiente]}`);
   };
 
   const handleCambiarMetaHoras = (nuevaMeta) => {
-    setPerfil((prev) => ({
-      ...prev,
-      meta_horas_semanales: nuevaMeta,
-    }));
+    setPerfil((prev) => {
+      const actualizado = {
+        ...prev,
+        meta_horas_semanales: nuevaMeta,
+      };
+      guardarPerfil(actualizado);
+      return actualizado;
+    });
     mostrarNotificacion(
       nuevaMeta ? `Meta semanal definida en ${nuevaMeta}h` : "Meta semanal actualizada"
     );
   };
 
-  const handleImportarBackup = async (file) => {
+  // Carga e importación universal (.xlsx, .csv, .json)
+  const handleImportarArchivo = async (file) => {
     try {
-      await importarBackupJSON(file);
-      setActividades(cargarActividades());
-      setPerfil(cargarPerfil());
-      setCategorias(cargarCategorias());
-      setApariencia(cargarApariencia());
-      mostrarNotificacion("Respaldo importado correctamente");
+      const resultado = await importarArchivoCualquiera(file);
+      if (resultado.tipo === "backup_completo") {
+        if (resultado.actividades) guardarActividades(resultado.actividades);
+        if (resultado.perfil) guardarPerfil(resultado.perfil);
+        if (resultado.categorias) guardarCategorias(resultado.categorias);
+        if (resultado.apariencia) guardarApariencia(resultado.apariencia);
+        setActividades(cargarActividades());
+        setPerfil(cargarPerfil());
+        setCategorias(cargarCategorias());
+        setApariencia(cargarApariencia());
+        mostrarNotificacion(`Copia restaurada exitosamente (${resultado.cantidad} actividades)`);
+      } else if (resultado.tipo === "lista_actividades") {
+        const existentes = cargarActividades();
+        const idsExistentes = new Set(existentes.map((a) => a.id));
+        const nuevas = resultado.actividades.filter((a) => !idsExistentes.has(a.id));
+        const unificadas = [...existentes, ...nuevas];
+        guardarActividades(unificadas);
+        setActividades(unificadas);
+        mostrarNotificacion(`Se importaron ${resultado.cantidad} actividades correctamente`);
+      }
     } catch (err) {
-      alert("Error al importar el respaldo: " + err.message);
+      alert("Error al importar el archivo: " + err.message);
     }
   };
 
@@ -259,14 +334,17 @@ export default function App() {
       <Navbar
         perfil={perfil}
         tema={apariencia.tema}
+        zoom={zoom}
+        onCambiarZoom={cambiarZoom}
+        onResetearZoom={resetearZoom}
         onToggleTema={toggleTema}
         onNuevaActividad={() => handleNuevaActividad(fechaSeleccionada)}
         onAbrirReportes={() => setModalReportes(true)}
         onAbrirApariencia={() => setModalApariencia(true)}
         onAbrirPerfil={() => setModalPerfil(true)}
         onAbrirCatalogos={() => setModalCatalogos(true)}
-        onExportarBackup={exportarBackupJSON}
-        onImportarBackup={handleImportarBackup}
+        onAbrirDescarga={() => setModalDescarga(true)}
+        onImportarArchivo={handleImportarArchivo}
       />
 
       <main className="main-content">
@@ -334,6 +412,18 @@ export default function App() {
         />
       )}
 
+      {modalDescarga && (
+        <ExportModal
+          perfil={perfil}
+          colorAcento={apariencia.colorAcento}
+          jornada={jornada}
+          actividades={actividades}
+          fechaReferencia={fechaSeleccionada}
+          onCerrar={() => setModalDescarga(false)}
+          onNotificar={mostrarNotificacion}
+        />
+      )}
+
       {modalApariencia && (
         <AppearanceModal
           apariencia={apariencia}
@@ -347,6 +437,7 @@ export default function App() {
           perfil={perfil}
           onGuardar={(p) => {
             setPerfil(p);
+            guardarPerfil(p);
             mostrarNotificacion("Configuración guardada");
           }}
           onCerrar={() => setModalPerfil(false)}
@@ -358,6 +449,7 @@ export default function App() {
           categorias={categorias}
           onGuardar={(c) => {
             setCategorias(c);
+            guardarCategorias(c);
           }}
           onCerrar={() => setModalCatalogos(false)}
         />

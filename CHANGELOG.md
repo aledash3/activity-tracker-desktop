@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-10-30
+
+### Added
+- Native file export and download handler: integrated `@tauri-apps/plugin-dialog` and native Rust IPC file writing (`guardar_archivo`), resolving WebView2 `<a download>` blocking and allowing users to save files directly to any destination on their filesystem.
+- Microsoft Excel (`.xlsx`) export and import: structured spreadsheet generation with metadata headers, net hour formulas, and requester breakdown powered by `write-excel-file` and `read-excel-file`.
+- Universal data import: seamless loading of `.xlsx`, `.csv`, and `.json` files via the navbar upload button with automatic schema detection and non-destructive activity merging.
+- Variable interface zoom: controllable via `Ctrl + Mouse Wheel` and dedicated navbar buttons (`[-]`, `[100%]`, `[+]`) next to the theme toggle, scaled smoothly from 70% to 160% and persisted in `localStorage`.
+- Dedicated Export Modal (`ExportModal`): download picker for Excel (.xlsx), PDF (.pdf), CSV (.csv), and JSON backups with options for full history or current week scope.
+
+### Fixed
+- Reports modal scrolling: added `min-height: 0` flex constraints, sticky table headers, and custom scrollbar styling, allowing users to scroll through all recorded activities smoothly without content truncation.
+- Preserved current week activity data and user profile across app updates.
+
 ## [1.1.0] - 2026-10-30
 
 ### Added

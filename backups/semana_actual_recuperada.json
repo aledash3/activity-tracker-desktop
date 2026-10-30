@@ -1,0 +1,187 @@
+﻿{
+    "apariencia":  {
+                       "tema":  "dark",
+                       "colorAcento":  "#17b0c4",
+                       "fuente":  "Inter",
+                       "tamanoFuente":  "normal",
+                       "bordes":  "suave"
+                   },
+    "actividades":  {
+                        "value":  [
+                                      {
+                                          "fecha":  "2026-10-27",
+                                          "hora_inicio":  "11:00",
+                                          "hora_fin":  "12:00",
+                                          "categoria":  "",
+                                          "solicitante":  "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+                                          "estado":  "completado",
+                                          "descripcion":  "Reuni�n virtual (V�a Zoom)",
+                                          "entregable":  "",
+                                          "id":  "act-1793375628954"
+                                      },
+                                      {
+                                          "fecha":  "2026-10-27",
+                                          "hora_inicio":  "12:00",
+                                          "hora_fin":  "13:00",
+                                          "categoria":  "",
+                                          "solicitante":  "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+                                          "estado":  "completado",
+                                          "descripcion":  "B�squeda de archivos y scripts hist�ricos en la computadora de la universidad.",
+                                          "entregable":  "",
+                                          "id":  "act-1793375662076"
+                                      },
+                                      {
+                                          "fecha":  "2026-10-27",
+                                          "hora_inicio":  "14:00",
+                                          "hora_fin":  "16:00",
+                                          "categoria":  "",
+                                          "solicitante":  "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+                                          "estado":  "completado",
+                                          "descripcion":  "Revisi�n de la VM en la que est� alojada la p�gina web del grupo.",
+                                          "entregable":  "",
+                                          "id":  "act-1793375691945"
+                                      },
+                                      {
+                                          "fecha":  "2026-10-29",
+                                          "hora_inicio":  "09:00",
+                                          "hora_fin":  "10:00",
+                                          "categoria":  "",
+                                          "solicitante":  "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+                                          "estado":  "completado",
+                                          "descripcion":  "Refactorizaci�n de la p�gina web del grupo",
+                                          "entregable":  "",
+                                          "id":  "act-1793375781124"
+                                      },
+                                      {
+                                          "fecha":  "2026-10-29",
+                                          "hora_inicio":  "10:00",
+                                          "hora_fin":  "11:00",
+                                          "categoria":  "",
+                                          "solicitante":  "UPS",
+                                          "estado":  "completado",
+                                          "descripcion":  "Simulacro de sismo.",
+                                          "entregable":  "",
+                                          "id":  "act-1793375816231"
+                                      },
+                                      {
+                                          "fecha":  "2026-10-29",
+                                          "hora_inicio":  "11:00",
+                                          "hora_fin":  "12:00",
+                                          "categoria":  "",
+                                          "solicitante":  "Ing. Diego Fernando Vallejo Huanga Msc.",
+                                          "estado":  "completado",
+                                          "descripcion":  "Reuni�n Virtual (V�a Zoom)",
+                                          "entregable":  "",
+                                          "id":  "act-1793376051561"
+                                      },
+                                      {
+                                          "fecha":  "2026-10-29",
+                                          "hora_inicio":  "12:00",
+                                          "hora_fin":  "13:00",
+                                          "categoria":  "",
+                                          "solicitante":  "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+                                          "estado":  "completado",
+                                          "descripcion":  "Refactorizaci�n de la p�gina web del grupo.",
+                                          "entregable":  "",
+                                          "id":  "act-1793376081458"
+                                      },
+                                      {
+                                          "fecha":  "2026-10-29",
+                                          "hora_inicio":  "14:00",
+                                          "hora_fin":  "17:00",
+                                          "categoria":  "",
+                                          "solicitante":  "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+                                          "estado":  "completado",
+                                          "descripcion":  "Refactorizaci�n y despliegue de la p�gina web del grupo.",
+                                          "entregable":  "",
+                                          "id":  "act-1793376122635"
+                                      },
+                                      {
+                                          "fecha":  "2026-10-29",
+                                          "hora_inicio":  "17:00",
+                                          "hora_fin":  "18:00",
+                                          "categoria":  "",
+                                          "solicitante":  "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+                                          "estado":  "completado",
+                                          "descripcion":  "Debuggeo y revisi�n del CI de la p�gina web del grupo en GitHub.",
+                                          "entregable":  "",
+                                          "id":  "act-1793376202232"
+                                      },
+                                      {
+                                          "fecha":  "2026-10-30",
+                                          "hora_inicio":  "09:00",
+                                          "hora_fin":  "09:30",
+                                          "categoria":  "",
+                                          "solicitante":  "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+                                          "estado":  "completado",
+                                          "descripcion":  "Revisi�n del CI de la p�gina web del grupo en GitHub.",
+                                          "entregable":  "",
+                                          "id":  "act-1793376244432"
+                                      },
+                                      {
+                                          "fecha":  "2026-10-30",
+                                          "hora_inicio":  "09:30",
+                                          "hora_fin":  "10:00",
+                                          "categoria":  "",
+                                          "solicitante":  "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+                                          "estado":  "completado",
+                                          "descripcion":  "Reuni�n virtual (V�a Zoom)",
+                                          "entregable":  "",
+                                          "id":  "act-1793376270258"
+                                      },
+                                      {
+                                          "fecha":  "2026-10-30",
+                                          "hora_inicio":  "10:00",
+                                          "hora_fin":  "11:00",
+                                          "categoria":  "",
+                                          "solicitante":  "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+                                          "estado":  "completado",
+                                          "descripcion":  "Implementaci�n de cambios dentro de la p�gina web del grupo y redespliegue.",
+                                          "entregable":  "",
+                                          "id":  "act-1793376344884"
+                                      },
+                                      {
+                                          "fecha":  "2026-10-30",
+                                          "hora_inicio":  "11:00",
+                                          "hora_fin":  "13:00",
+                                          "categoria":  "",
+                                          "solicitante":  "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+                                          "estado":  "completado",
+                                          "descripcion":  "Implementaci�n de cambios dentro de AIQuest",
+                                          "entregable":  "",
+                                          "id":  "act-1793376580253"
+                                      }
+                                  ],
+                        "Count":  13
+                    },
+    "perfil":  {
+                   "nombre":  "David Alejandro Cruz Palacios",
+                   "identificacion":  "1724546005",
+                   "institucion":  "Universidad Polit�cnica Salesiana (UPS) Sede Quito, Campus Sur",
+                   "unidad_grupo":  "Grupo de Investigaci�n IDE IA GEO CA",
+                   "cargo":  "Ayudante de investigaci�n",
+                   "supervisor":  "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+                   "meta_horas_semanales":  20,
+                   "dias_laborables":  [
+                                           1,
+                                           3,
+                                           4
+                                       ],
+                   "recesos":  [
+                                   {
+                                       "id":  "almuerzo-1793375579233",
+                                       "dias":  [
+                                                    1,
+                                                    3,
+                                                    4
+                                                ],
+                                       "inicio":  "13:00",
+                                       "fin":  "14:00",
+                                       "minutos":  60
+                                   }
+                               ]
+               },
+    "categorias":  [
+
+                   ]
+}

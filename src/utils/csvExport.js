@@ -1,7 +1,8 @@
-﻿import { formatearFechaCorta } from "./dateUtils";
+import { formatearFechaCorta } from "./dateUtils";
 import { horasActividad } from "./jornada";
+import { guardarArchivoNativo } from "./fileIo";
 
-export const exportarCSV = ({ perfil, jornada, actividades }) => {
+export const exportarCSV = async ({ perfil = {}, jornada, actividades = [] }) => {
   const encabezados = [
     "#",
     "Fecha",
@@ -46,17 +47,22 @@ export const exportarCSV = ({ perfil, jornada, actividades }) => {
     ...filas.map((fila) => fila.join(";")),
   ].join("\r\n");
 
-  const blob = new Blob(["\uFEFF" + contenido], {
-    type: "text/csv;charset=utf-8;",
-  });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
   const nombreLimpio = (perfil.nombre || "actividades")
     .trim()
     .replace(/\s+/g, "_")
     .toLowerCase();
-  a.download = `actividades_${nombreLimpio}_${new Date().toISOString().slice(0, 10)}.csv`;
-  a.click();
-  URL.revokeObjectURL(url);
+
+  const nombreArchivo = `actividades_${nombreLimpio}_${new Date().toISOString().slice(0, 10)}.csv`;
+
+  const blob = new Blob(["\uFEFF" + contenido], {
+    type: "text/csv;charset=utf-8;",
+  });
+
+  return await guardarArchivoNativo({
+    nombreSugerido: nombreArchivo,
+    contenido: blob,
+    mimeType: "text/csv;charset=utf-8",
+    extension: "csv",
+    descripcionFiltro: "Archivo CSV delimitado por comas / punto y coma",
+  });
 };
