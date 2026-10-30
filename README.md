@@ -19,7 +19,10 @@ Native lightweight desktop application built with **React 19, Vite, Rust, and Ta
 ## Interface Preview
 
 <p align="center">
-  <img src="docs/assets/app_preview.svg" alt="Activity Tracker Desktop Interface Preview" width="100%">
+  <img src="docs/assets/app_preview_en.svg" alt="Activity Tracker Desktop Interface Preview (English)" width="100%">
+</p>
+<p align="center">
+  <sub>🌐 <b>Preview Language:</b> <b>English</b> · <a href="docs/assets/app_preview_es.svg">Ver vista previa en Español (Spanish)</a></sub>
 </p>
 
 ---
@@ -63,7 +66,9 @@ activity-tracker-desktop/
 │   └── icon.png                   # High-resolution source icon
 ├── docs/
 │   └── assets/
-│       └── app_preview.svg        # Vector UI preview for documentation
+│       ├── app_preview_en.svg     # English vector UI preview
+│       ├── app_preview_es.svg     # Spanish vector UI preview
+│       └── app_preview.svg        # Default UI preview
 ├── public/
 │   └── icon.png                   # Application favicon asset
 ├── scripts/
@@ -73,10 +78,10 @@ activity-tracker-desktop/
 │   │   ├── ActivityCard.jsx       # Individual activity item card
 │   │   ├── ActivityModal.jsx      # Create/edit activity dialog with validation
 │   │   ├── AppearanceModal.jsx    # Theme, accent color & calligraphy studio
-│   │   ├── CatalogModal.jsx       # Custom activity category manager
 │   │   ├── DayPicker.jsx          # Weekday toggle chips
+│   │   ├── ExportModal.jsx        # Data export dialog (.xlsx, .pdf, .csv, .json)
 │   │   ├── MiniCalendar.jsx       # Monthly date picker (working days enabled)
-│   │   ├── Navbar.jsx             # Top navigation bar & quick actions
+│   │   ├── Navbar.jsx             # Top navigation bar, zoom & quick actions
 │   │   ├── ProfileModal.jsx       # Workplace, role, working days & lunch schedules
 │   │   ├── ReportsModal.jsx       # Report filtering, KPI summary & PDF/CSV export
 │   │   ├── WeekNavigator.jsx      # Week selector & weekly hour progress bar

@@ -19,7 +19,10 @@ Aplicación nativa ultraligera de escritorio construida con **React 19, Vite, Ru
 ## Vista Previa de la Interfaz
 
 <p align="center">
-  <img src="docs/assets/app_preview.svg" alt="Vista previa de Bitácora de Actividades" width="100%">
+  <img src="docs/assets/app_preview_es.svg" alt="Vista previa de Bitácora de Actividades (Español)" width="100%">
+</p>
+<p align="center">
+  <sub>🌐 <b>Idioma de la vista previa:</b> <b>Español</b> · <a href="docs/assets/app_preview_en.svg">View preview in English (Inglés)</a></sub>
 </p>
 
 ---
@@ -63,7 +66,9 @@ activity-tracker-desktop/
 │   └── icon.png                   # Ícono de aplicación en alta resolución
 ├── docs/
 │   └── assets/
-│       └── app_preview.svg        # Vista previa vectorial de la interfaz
+│       ├── app_preview_es.svg     # Vista previa vectorial en español
+│       ├── app_preview_en.svg     # Vista previa vectorial en inglés
+│       └── app_preview.svg        # Vista previa por defecto
 ├── public/
 │   └── icon.png                   # Ícono estático de la aplicación
 ├── scripts/
@@ -73,10 +78,10 @@ activity-tracker-desktop/
 │   │   ├── ActivityCard.jsx       # Tarjeta individual de actividad
 │   │   ├── ActivityModal.jsx      # Formulario modal de creación y edición
 │   │   ├── AppearanceModal.jsx    # Estudio de colores, tema y caligrafía
-│   │   ├── CatalogModal.jsx       # Administrador de categorías personalizadas
 │   │   ├── DayPicker.jsx          # Selector de días de la semana
+│   │   ├── ExportModal.jsx        # Diálogo modal de exportación (.xlsx, .pdf, .csv, .json)
 │   │   ├── MiniCalendar.jsx       # Calendario mensual (solo días laborables habilitados)
-│   │   ├── Navbar.jsx             # Barra superior de navegación y acciones rápidas
+│   │   ├── Navbar.jsx             # Barra superior de navegación, zoom y acciones rápidas
 │   │   ├── ProfileModal.jsx       # Configuración laboral, cargo, días laborables y almuerzos
 │   │   ├── ReportsModal.jsx       # Filtro de reportes, métricas y exportación PDF/CSV
 │   │   ├── WeekNavigator.jsx      # Selector semanal y barra de progreso de horas
