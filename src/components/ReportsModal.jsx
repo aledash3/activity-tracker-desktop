@@ -21,6 +21,7 @@ import { diasVisiblesSemana, etiquetaDias, horasActividad } from "../utils/jorna
 import { generarPDFReporte } from "../utils/pdfExport";
 import { exportarCSV } from "../utils/csvExport";
 import { exportarExcelActividades } from "../utils/fileIo";
+import { formatearSolicitantes } from "../utils/solicitantes";
 
 export default function ReportsModal({
   perfil,
@@ -389,8 +390,7 @@ export default function ReportsModal({
                       <th>Fecha</th>
                       <th>Horario</th>
                       <th>Horas</th>
-                      <th>Categoría</th>
-                      <th>Solicitante</th>
+                      <th>Solicitante(s)</th>
                       <th>Actividad / Descripción</th>
                       <th>Entregable / Avance</th>
                       <th>Estado</th>
@@ -409,8 +409,7 @@ export default function ReportsModal({
                         <td>
                           <strong>{horasActividad(act, jornada)}h</strong>
                         </td>
-                        <td>{act.categoria || "-"}</td>
-                        <td>{act.solicitante || "-"}</td>
+                        <td>{formatearSolicitantes(act) || "-"}</td>
                         <td>{act.descripcion}</td>
                         <td>{act.entregable || "-"}</td>
                         <td>

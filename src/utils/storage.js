@@ -6,10 +6,10 @@ import {
   DEFAULT_APARIENCIA_USUARIO,
 } from "./initialData";
 import { guardarArchivoNativo } from "./fileIo";
+import { normalizarSolicitantes } from "./solicitantes";
 
 const KEY_ACTIVIDADES = "bitacora_actividades_data_v3";
 const KEY_PERFIL = "bitacora_actividades_perfil_v3";
-const KEY_CATEGORIAS = "bitacora_actividades_categorias_v3";
 const KEY_APARIENCIA = "bitacora_actividades_apariencia_v3";
 
 export const PALETAS_COLOR = [
@@ -89,15 +89,39 @@ export const APARIENCIA_DEFAULT = {
 export const cargarActividades = () => {
   try {
     const raw = localStorage.getItem(KEY_ACTIVIDADES);
+    let lista = [];
     if (!raw) {
       if (DEFAULT_ACTIVIDADES_SEMANA && DEFAULT_ACTIVIDADES_SEMANA.length > 0) {
-        guardarActividades(DEFAULT_ACTIVIDADES_SEMANA);
-        return [...DEFAULT_ACTIVIDADES_SEMANA];
+        lista = [...DEFAULT_ACTIVIDADES_SEMANA];
       }
-      return [];
+    } else {
+      const parsed = JSON.parse(raw);
+      lista = Array.isArray(parsed) ? parsed : [];
     }
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
+
+    // Unificar con actividades predeterminadas/respaldadas para evitar pérdida de registros
+    if (DEFAULT_ACTIVIDADES_SEMANA && DEFAULT_ACTIVIDADES_SEMANA.length > 0) {
+      const idsExistentes = new Set(lista.map((a) => a.id));
+      DEFAULT_ACTIVIDADES_SEMANA.forEach((defAct) => {
+        if (!idsExistentes.has(defAct.id)) {
+          lista.push(defAct);
+        }
+      });
+    }
+
+    // Normalizar múltiples solicitantes y limpiar campo obsoleto categoria
+    lista = lista.map((act) => {
+      const solicitantes = normalizarSolicitantes(act);
+      const { categoria, ...resto } = act;
+      return {
+        ...resto,
+        solicitantes,
+        solicitante: solicitantes.join(", "),
+      };
+    });
+
+    guardarActividades(lista);
+    return lista;
   } catch {
     return DEFAULT_ACTIVIDADES_SEMANA ? [...DEFAULT_ACTIVIDADES_SEMANA] : [];
   }
@@ -105,7 +129,16 @@ export const cargarActividades = () => {
 
 export const guardarActividades = (actividades) => {
   try {
-    localStorage.setItem(KEY_ACTIVIDADES, JSON.stringify(actividades));
+    const normalizadas = (actividades || []).map((act) => {
+      const solicitantes = normalizarSolicitantes(act);
+      const { categoria, ...resto } = act;
+      return {
+        ...resto,
+        solicitantes,
+        solicitante: solicitantes.join(", "),
+      };
+    });
+    localStorage.setItem(KEY_ACTIVIDADES, JSON.stringify(normalizadas));
   } catch (e) {
     console.error("Error al guardar actividades", e);
   }
@@ -137,25 +170,6 @@ export const guardarPerfil = (perfil) => {
   }
 };
 
-export const cargarCategorias = () => {
-  try {
-    const raw = localStorage.getItem(KEY_CATEGORIAS);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-};
-
-export const guardarCategorias = (categorias) => {
-  try {
-    localStorage.setItem(KEY_CATEGORIAS, JSON.stringify(categorias));
-  } catch (e) {
-    console.error("Error al guardar categorías", e);
-  }
-};
-
 export const cargarApariencia = () => {
   try {
     const raw = localStorage.getItem(KEY_APARIENCIA);
@@ -182,10 +196,9 @@ export const guardarApariencia = (apariencia) => {
 
 export const exportarBackupJSON = async () => {
   const data = {
-    version: "3.1",
+    version: "3.2",
     fecha_exportacion: new Date().toISOString(),
     perfil: cargarPerfil(),
-    categorias: cargarCategorias(),
     apariencia: cargarApariencia(),
     actividades: cargarActividades(),
   };
@@ -210,7 +223,6 @@ export const importarBackupJSON = (file) => {
         if (data.actividades && Array.isArray(data.actividades)) {
           guardarActividades(data.actividades);
           if (data.perfil) guardarPerfil(normalizarPerfil(data.perfil));
-          if (Array.isArray(data.categorias)) guardarCategorias(data.categorias);
           if (data.apariencia) guardarApariencia({ ...APARIENCIA_DEFAULT, ...data.apariencia });
           resolve(true);
         } else {

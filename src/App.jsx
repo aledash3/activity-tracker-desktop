@@ -5,7 +5,6 @@ import WeeklyGrid from "./components/WeeklyGrid";
 import ActivityModal from "./components/ActivityModal";
 import ReportsModal from "./components/ReportsModal";
 import ProfileModal from "./components/ProfileModal";
-import CatalogModal from "./components/CatalogModal";
 import AppearanceModal from "./components/AppearanceModal";
 import ExportModal from "./components/ExportModal";
 
@@ -14,14 +13,13 @@ import {
   guardarActividades,
   cargarPerfil,
   guardarPerfil,
-  cargarCategorias,
-  guardarCategorias,
   cargarApariencia,
   guardarApariencia,
   OPCIONES_CALIGRAFIA,
 } from "./utils/storage";
 
 import { importarArchivoCualquiera } from "./utils/fileIo";
+import { normalizarSolicitantes } from "./utils/solicitantes";
 
 import { hoyISO, lunesDe } from "./utils/dateUtils";
 import {
@@ -48,7 +46,6 @@ export default function App() {
 
   const [actividades, setActividades] = useState(cargarActividades);
   const [perfil, setPerfil] = useState(cargarPerfil);
-  const [categorias, setCategorias] = useState(cargarCategorias);
   const [apariencia, setApariencia] = useState(cargarApariencia);
 
   // Zoom variable persistido
@@ -115,7 +112,6 @@ export default function App() {
   const [modalDescarga, setModalDescarga] = useState(false);
   const [modalApariencia, setModalApariencia] = useState(false);
   const [modalPerfil, setModalPerfil] = useState(false);
-  const [modalCatalogos, setModalCatalogos] = useState(false);
 
   const [mensajeToast, setMensajeToast] = useState("");
 
@@ -183,11 +179,13 @@ export default function App() {
   }, [actividades]);
 
   const solicitantes = useMemo(() => {
-    const nombres = actividades
-      .map((a) => a.solicitante?.trim())
-      .filter(Boolean);
-    return [...new Set(nombres)].sort();
-  }, [actividades]);
+    const nombres = new Set();
+    if (perfil.supervisor?.trim()) nombres.add(perfil.supervisor.trim());
+    actividades.forEach((a) => {
+      normalizarSolicitantes(a).forEach((s) => nombres.add(s));
+    });
+    return [...nombres].sort();
+  }, [actividades, perfil.supervisor]);
 
   const diasVisibles = useMemo(
     () => diasVisiblesSemana(lunesActual, jornada, fechasConActividades),
@@ -317,11 +315,9 @@ export default function App() {
       if (resultado.tipo === "backup_completo") {
         if (resultado.actividades) guardarActividades(resultado.actividades);
         if (resultado.perfil) guardarPerfil(resultado.perfil);
-        if (resultado.categorias) guardarCategorias(resultado.categorias);
         if (resultado.apariencia) guardarApariencia(resultado.apariencia);
         setActividades(cargarActividades());
         setPerfil(cargarPerfil());
-        setCategorias(cargarCategorias());
         setApariencia(cargarApariencia());
         mostrarNotificacion(`Copia restaurada exitosamente (${resultado.cantidad} actividades)`);
       } else if (resultado.tipo === "lista_actividades") {
@@ -351,7 +347,6 @@ export default function App() {
         onAbrirReportes={() => setModalReportes(true)}
         onAbrirApariencia={() => setModalApariencia(true)}
         onAbrirPerfil={() => setModalPerfil(true)}
-        onAbrirCatalogos={() => setModalCatalogos(true)}
         onAbrirDescarga={() => setModalDescarga(true)}
         onImportarArchivo={handleImportarArchivo}
       />
@@ -400,7 +395,6 @@ export default function App() {
           key={actividadEditando?.id || fechaParaNueva || "nueva"}
           actividadEditando={actividadEditando}
           fechaPredeterminada={fechaParaNueva}
-          categorias={categorias}
           solicitantes={solicitantes}
           jornada={jornada}
           onGuardar={handleGuardarActividad}
@@ -451,17 +445,6 @@ export default function App() {
             mostrarNotificacion("Configuración guardada");
           }}
           onCerrar={() => setModalPerfil(false)}
-        />
-      )}
-
-      {modalCatalogos && (
-        <CatalogModal
-          categorias={categorias}
-          onGuardar={(c) => {
-            setCategorias(c);
-            guardarCategorias(c);
-          }}
-          onCerrar={() => setModalCatalogos(false)}
         />
       )}
     </div>

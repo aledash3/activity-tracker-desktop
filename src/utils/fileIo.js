@@ -1,6 +1,7 @@
 import writeXlsxFile from "write-excel-file/browser";
 import readXlsxFile from "read-excel-file/browser";
 import { horasActividad } from "./jornada";
+import { normalizarSolicitantes, formatearSolicitantes } from "./solicitantes";
 
 // Detección segura de entorno Tauri v2
 const esEntornoTauri = () => {
@@ -147,8 +148,7 @@ export async function exportarExcelActividades({
     { value: "Hora Inicio", fontWeight: "bold", backgroundColor: "#0f172a", color: "#ffffff", align: "center" },
     { value: "Hora Fin", fontWeight: "bold", backgroundColor: "#0f172a", color: "#ffffff", align: "center" },
     { value: "Horas Netas", fontWeight: "bold", backgroundColor: "#0f172a", color: "#ffffff", align: "right" },
-    { value: "Categoría", fontWeight: "bold", backgroundColor: "#0f172a", color: "#ffffff" },
-    { value: "Solicitante", fontWeight: "bold", backgroundColor: "#0f172a", color: "#ffffff" },
+    { value: "Solicitante(s)", fontWeight: "bold", backgroundColor: "#0f172a", color: "#ffffff" },
     { value: "Actividad / Descripción", fontWeight: "bold", backgroundColor: "#0f172a", color: "#ffffff" },
     { value: "Entregable / Avance", fontWeight: "bold", backgroundColor: "#0f172a", color: "#ffffff" },
     { value: "Estado", fontWeight: "bold", backgroundColor: "#0f172a", color: "#ffffff", align: "center" },
@@ -166,8 +166,7 @@ export async function exportarExcelActividades({
       { type: String, value: a.hora_inicio || "", backgroundColor: bg, align: "center" },
       { type: String, value: a.hora_fin || "", backgroundColor: bg, align: "center" },
       { type: Number, value: Number(horas.toFixed(2)), backgroundColor: bg, align: "right" },
-      { type: String, value: a.categoria || "", backgroundColor: bg },
-      { type: String, value: a.solicitante || "", backgroundColor: bg },
+      { type: String, value: formatearSolicitantes(a), backgroundColor: bg },
       { type: String, value: a.descripcion || "", backgroundColor: bg },
       { type: String, value: a.entregable || "", backgroundColor: bg },
       {
@@ -187,7 +186,7 @@ export async function exportarExcelActividades({
     null,
     null,
     { type: Number, value: Number(sumaHoras.toFixed(2)), fontWeight: "bold", align: "right" },
-    { value: `Actividades: ${actividades.length}`, fontWeight: "bold", span: 5 },
+    { value: `Actividades: ${actividades.length}`, fontWeight: "bold", span: 4 },
   ];
 
   const sheetData = [...metaRows, tableHeaders, ...dataRows, totalRow];
@@ -198,8 +197,7 @@ export async function exportarExcelActividades({
     { width: 13 },
     { width: 13 },
     { width: 14 },
-    { width: 20 },
-    { width: 32 },
+    { width: 34 },
     { width: 45 },
     { width: 32 },
     { width: 16 },
@@ -275,7 +273,6 @@ export async function importarArchivoCualquiera(file) {
         tipo: "backup_completo",
         actividades: data.actividades,
         perfil: data.perfil,
-        categorias: data.categorias,
         apariencia: data.apariencia,
         cantidad: data.actividades.length,
       };
@@ -365,10 +362,9 @@ export async function importarArchivoCualquiera(file) {
         colIndices.horaInicio !== -1 ? parsearHora(row[colIndices.horaInicio]) : "09:00";
       const horaFin =
         colIndices.horaFin !== -1 ? parsearHora(row[colIndices.horaFin]) : "10:00";
-      const categoria =
-        colIndices.categoria !== -1 ? String(row[colIndices.categoria] || "").trim() : "";
-      const solicitante =
+      const solicitanteRaw =
         colIndices.solicitante !== -1 ? String(row[colIndices.solicitante] || "").trim() : "";
+      const solicitantes = normalizarSolicitantes(solicitanteRaw);
       const entregable =
         colIndices.entregable !== -1 ? String(row[colIndices.entregable] || "").trim() : "";
       const estadoRaw =
@@ -378,14 +374,14 @@ export async function importarArchivoCualquiera(file) {
       if (estadoRaw.includes("pend") || estadoRaw.includes("todo")) estado = "pendiente";
       if (estadoRaw.includes("prog") || estadoRaw.includes("curso")) estado = "en_progreso";
 
-      if (desc || categoria || solicitante) {
+      if (desc || solicitanteRaw) {
         actividadesLeidas.push({
           id: `act-${Date.now()}-${r}`,
           fecha,
           hora_inicio: horaInicio,
           hora_fin: horaFin,
-          categoria,
-          solicitante,
+          solicitante: solicitantes.join(", "),
+          solicitantes,
           descripcion: desc || "Actividad importada",
           entregable,
           estado,
@@ -464,8 +460,8 @@ export async function importarArchivoCualquiera(file) {
       const horaInicio =
         colIndices.horaInicio !== -1 ? parsearHora(celdas[colIndices.horaInicio]) : "09:00";
       const horaFin = colIndices.horaFin !== -1 ? parsearHora(celdas[colIndices.horaFin]) : "10:00";
-      const categoria = colIndices.categoria !== -1 ? celdas[colIndices.categoria] : "";
-      const solicitante = colIndices.solicitante !== -1 ? celdas[colIndices.solicitante] : "";
+      const solicitanteRaw = colIndices.solicitante !== -1 ? celdas[colIndices.solicitante] : "";
+      const solicitantes = normalizarSolicitantes(solicitanteRaw);
       const entregable = colIndices.entregable !== -1 ? celdas[colIndices.entregable] : "";
       const estadoRaw = (colIndices.estado !== -1 ? celdas[colIndices.estado] : "").toLowerCase();
 
@@ -473,14 +469,14 @@ export async function importarArchivoCualquiera(file) {
       if (estadoRaw.includes("pend")) estado = "pendiente";
       if (estadoRaw.includes("prog")) estado = "en_progreso";
 
-      if (desc || categoria || solicitante) {
+      if (desc || solicitanteRaw) {
         actividadesCSV.push({
           id: `act-${Date.now()}-${i}`,
           fecha,
           hora_inicio: horaInicio,
           hora_fin: horaFin,
-          categoria,
-          solicitante,
+          solicitante: solicitantes.join(", "),
+          solicitantes,
           descripcion: desc || "Actividad importada",
           entregable,
           estado,

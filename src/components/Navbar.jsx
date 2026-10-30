@@ -6,7 +6,6 @@ import {
   Briefcase,
   Download,
   Upload,
-  Tag,
   Palette,
   Sun,
   Moon,
@@ -25,7 +24,6 @@ export default function Navbar({
   onAbrirReportes,
   onAbrirApariencia,
   onAbrirPerfil,
-  onAbrirCatalogos,
   onAbrirDescarga,
   onImportarArchivo,
 }) {
@@ -83,16 +81,6 @@ export default function Navbar({
           >
             <FileText size={15} />
             <span>Reportes</span>
-          </button>
-
-          {/* Botón de Categorías */}
-          <button
-            type="button"
-            className="btn btn-outline btn-sm"
-            onClick={onAbrirCatalogos}
-          >
-            <Tag size={15} />
-            <span className="hide-mobile">Categorías</span>
           </button>
 
           {/* Botón de Personalización (Colores y Caligrafía) */}

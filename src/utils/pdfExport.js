@@ -3,6 +3,7 @@ import autoTable from "jspdf-autotable";
 import { formatearFechaCorta, formatearFechaTexto } from "./dateUtils";
 import { horasActividad } from "./jornada";
 import { guardarArchivoNativo } from "./fileIo";
+import { formatearSolicitantes } from "./solicitantes";
 
 const hexToRgb = (hex) => {
   const clean = (hex || "#2563eb").replace("#", "");
@@ -126,14 +127,15 @@ export const generarPDFReporte = async ({
     const detalleCompleto =
       act.descripcion + (act.entregable ? `\nEntregable / Avance: ${act.entregable}` : "");
 
+    const solicitantesTexto = formatearSolicitantes(act) || "-";
+
     return [
       index + 1,
       formatearFechaCorta(act.fecha),
       horarioTexto,
       `${horas}h`,
-      act.categoria || "-",
+      solicitantesTexto,
       detalleCompleto,
-      act.solicitante || "-",
       estadoTexto,
     ];
   });
@@ -141,7 +143,7 @@ export const generarPDFReporte = async ({
   // 5. Renderizado de la tabla
   autoTable(doc, {
     startY: y,
-    head: [["#", "Fecha", "Horario", "Horas", "Categoría", "Actividad / Descripción", "Solicitante", "Estado"]],
+    head: [["#", "Fecha", "Horario", "Horas", "Solicitante(s)", "Actividad / Descripción", "Estado"]],
     body: filasTabla,
     theme: "grid",
     headStyles: {
@@ -159,20 +161,19 @@ export const generarPDFReporte = async ({
       cellPadding: 2.2,
     },
     columnStyles: {
-      0: { cellWidth: 7, halign: "center" },
-      1: { cellWidth: 18, halign: "center" },
-      2: { cellWidth: 22, halign: "center" },
-      3: { cellWidth: 12, halign: "center", fontStyle: "bold" },
-      4: { cellWidth: 24 },
-      5: { cellWidth: 55 },
-      6: { cellWidth: 22 },
-      7: { cellWidth: 22, halign: "center", fontStyle: "bold" },
+      0: { cellWidth: 8, halign: "center" },
+      1: { cellWidth: 20, halign: "center" },
+      2: { cellWidth: 24, halign: "center" },
+      3: { cellWidth: 14, halign: "center", fontStyle: "bold" },
+      4: { cellWidth: 32 },
+      5: { cellWidth: 62 },
+      6: { cellWidth: 22, halign: "center", fontStyle: "bold" },
     },
     alternateRowStyles: {
       fillColor: [248, 250, 252],
     },
     didParseCell: (data) => {
-      if (data.section === "body" && data.column.index === 7) {
+      if (data.section === "body" && data.column.index === 6) {
         if (data.cell.raw === "COMPLETADO") {
           data.cell.styles.textColor = [21, 128, 61];
         } else {

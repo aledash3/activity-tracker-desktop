@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { formatearHoras } from "../utils/dateUtils";
 import { horasActividad } from "../utils/jornada";
+import { normalizarSolicitantes } from "../utils/solicitantes";
 
 export default function ActivityCard({
   actividad,
@@ -18,6 +19,7 @@ export default function ActivityCard({
 }) {
   const horas = horasActividad(actividad, jornada);
   const esCompletado = actividad.estado === "completado";
+  const solicitantes = normalizarSolicitantes(actividad);
 
   return (
     <article className={`activity-card ${esCompletado ? "is-done" : "is-pending"}`}>
@@ -35,21 +37,15 @@ export default function ActivityCard({
         </span>
       </div>
 
-      {/* Categoría */}
-      {actividad.categoria && (
-        <div className="activity-category-tag">
-          {actividad.categoria}
-        </div>
-      )}
-
       {/* Descripción principal */}
       <p className="activity-description">
         {actividad.descripcion}
       </p>
 
-      {actividad.solicitante && (
+      {solicitantes.length > 0 && (
         <div className="activity-requester">
-          <strong>Solicita:</strong> {actividad.solicitante}
+          <strong>{solicitantes.length > 1 ? "Solicitan:" : "Solicita:"}</strong>{" "}
+          <span>{solicitantes.join(", ")}</span>
         </div>
       )}
 

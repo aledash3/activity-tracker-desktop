@@ -1,6 +1,7 @@
 import { formatearFechaCorta } from "./dateUtils";
 import { horasActividad } from "./jornada";
 import { guardarArchivoNativo } from "./fileIo";
+import { formatearSolicitantes } from "./solicitantes";
 
 export const exportarCSV = async ({ perfil = {}, jornada, actividades = [] }) => {
   const encabezados = [
@@ -9,8 +10,7 @@ export const exportarCSV = async ({ perfil = {}, jornada, actividades = [] }) =>
     "Hora Inicio",
     "Hora Fin",
     "Horas",
-    "Categoria",
-    "Solicitante",
+    "Solicitante(s)",
     "Estado",
     "Descripcion de Actividad",
     "Entregable / Avance",
@@ -23,14 +23,14 @@ export const exportarCSV = async ({ perfil = {}, jornada, actividades = [] }) =>
 
   const filas = actividades.map((a, i) => {
     const horas = horasActividad(a, jornada);
+    const solicitantesTexto = formatearSolicitantes(a);
     return [
       i + 1,
       formatearFechaCorta(a.fecha),
       a.hora_inicio || "",
       a.hora_fin || "",
       horas,
-      `"${(a.categoria || "").replace(/"/g, '""')}"`,
-      `"${(a.solicitante || "").replace(/"/g, '""')}"`,
+      `"${solicitantesTexto.replace(/"/g, '""')}"`,
       (a.estado || "completado").toUpperCase(),
       `"${(a.descripcion || "").replace(/"/g, '""')}"`,
       `"${(a.entregable || "").replace(/"/g, '""')}"`,

@@ -22,6 +22,7 @@ src-tauri/gen/
 *.local
 .env
 .env.*.local
+backups/webview_leveldb/
 
 # Editor directories and files
 .vscode/*

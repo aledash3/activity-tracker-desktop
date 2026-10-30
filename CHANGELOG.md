@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-10-30
+
+### Added
+- Support for multiple requesters per activity (`solicitantes`):
+  - In `ActivityModal`, assign one or more requesters per activity using interactive chip tags with removal actions.
+  - Quick-suggestion buttons populated dynamically from the supervisor profile and previously registered requesters.
+  - Datalist autocomplete for adding new requesters on Enter key or button click.
+  - Backward compatibility: automatically normalizes single-requester strings, arrays, or comma-separated lists across board cards, reports, and exports.
+- Full automated data backup of all 18 registered activities and custom user profile (`backups/backup_completo_bitacora_2026-10-30.json`), automatically loaded into the new app version.
+
+### Removed
+- Removed Categories (`categorias`) feature entirely from the interface:
+  - Removed "Categorías" button from navbar.
+  - Removed `CatalogModal` component and category selector in `ActivityModal`.
+  - Removed Category column and tags from `ActivityCard`, `ReportsModal`, PDF export, Excel (`.xlsx`) export, and CSV export.
+
 ## [1.2.3] - 2026-10-30
 
 ### Fixed
