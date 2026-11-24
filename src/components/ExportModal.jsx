@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   X,
   Download,
@@ -26,16 +26,24 @@ export default function ExportModal({
   const [alcance, setAlcance] = useState("todas"); // "todas" | "semana"
   const [descargando, setDescargando] = useState(null);
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") onCerrar();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [onCerrar]);
+
   // Filtrar actividades según el alcance seleccionado
   const lunes = lunesDe(fechaReferencia);
   const domingo = sumarDias(lunes, 6);
 
-  const actividadesExportar = React.useMemo(() => {
-    if (alcance === "semana") {
-      return actividades.filter((a) => a.fecha >= lunes && a.fecha <= domingo);
-    }
-    return actividades;
-  }, [alcance, actividades, lunes, domingo]);
+  const actividadesSemana = useMemo(
+    () => actividades.filter((a) => a.fecha >= lunes && a.fecha <= domingo),
+    [actividades, lunes, domingo]
+  );
+
+  const actividadesExportar = alcance === "semana" ? actividadesSemana : actividades;
 
   const tituloPeriodo =
     alcance === "semana"
@@ -120,7 +128,6 @@ export default function ExportModal({
   return (
     <div
       className="modal-backdrop"
-      onClick={(e) => e.target === e.currentTarget && onCerrar()}
       role="dialog"
       aria-modal="true"
       aria-labelledby="export-modal-title"
@@ -165,7 +172,7 @@ export default function ExportModal({
               >
                 {alcance === "semana" && <Check size={14} />}
                 <Calendar size={14} />
-                <span>Solo la semana actual ({actividadesExportar.length})</span>
+                <span>Solo la semana actual ({actividadesSemana.length})</span>
               </button>
             </div>
           </div>

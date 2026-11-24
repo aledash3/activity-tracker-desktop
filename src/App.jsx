@@ -422,7 +422,7 @@ export default function App() {
           colorAcento={apariencia.colorAcento}
           jornada={jornada}
           actividades={actividades}
-          fechaReferencia={fechaSeleccionada}
+          fechaReferencia={lunesActual}
           onCerrar={() => setModalDescarga(false)}
           onNotificar={mostrarNotificacion}
         />

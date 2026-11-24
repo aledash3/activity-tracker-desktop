@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2026-11-24
+
+### Fixed
+- Prevented accidental modal dismissal when clicking or dragging the mouse outside modal dialogs across all modals (`ActivityModal`, `ProfileModal`, `AppearanceModal`, `ExportModal`, `ReportsModal`); modals now close only via explicit Close/Cancel buttons or pressing `Escape` (including `ExportModal`).
+- Fixed `ExportModal` weekly activity counter bug where "Solo la semana actual" showed the total activity count while "Todas las actividades" was selected, and synced its reference week with the currently viewed week (`lunesActual`).
+- Added missing `sumarDias` import in `ReportsModal`.
+
+### Changed
+- Updated complete data backup (`backups/backup_completo_bitacora_2026-11-24.json`) and preloaded application data (`src/utils/initialData.js`) with all 49 registered activities, user profile, and appearance preferences.
+
 ## [1.3.0] - 2026-10-30
 
 ### Added

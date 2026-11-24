@@ -155,7 +155,6 @@ export default function ActivityModal({
   return (
     <div
       className="modal-backdrop"
-      onClick={(e) => e.target === e.currentTarget && onCerrar()}
       role="dialog"
       aria-modal="true"
       aria-labelledby="activity-modal-title"

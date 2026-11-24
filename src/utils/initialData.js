@@ -1,4 +1,4 @@
-// Datos iniciales de la semana actual del usuario para garantizar
+// Datos iniciales del usuario para garantizar
 // preservación total de la información en instalaciones nuevas o reinicio de caché.
 
 export const DEFAULT_PERFIL_USUARIO = {
@@ -39,237 +39,633 @@ export const DEFAULT_APARIENCIA_USUARIO = {
 
 export const DEFAULT_ACTIVIDADES_SEMANA = [
   {
-    "id": "act-1793375628954",
     "fecha": "2026-10-27",
     "hora_inicio": "11:00",
     "hora_fin": "12:00",
     "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
-    "solicitantes": [
-      "Ing. Gustavo Ernesto Navas Ruilova Msc."
-    ],
     "estado": "completado",
     "descripcion": "Reunión virtual (Vía Zoom)",
-    "entregable": ""
+    "entregable": "",
+    "id": "act-1793375628954",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+    ]
   },
   {
-    "id": "act-1793375662076",
     "fecha": "2026-10-27",
     "hora_inicio": "12:00",
     "hora_fin": "13:00",
     "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
-    "solicitantes": [
-      "Ing. Gustavo Ernesto Navas Ruilova Msc."
-    ],
     "estado": "completado",
     "descripcion": "Búsqueda de archivos y scripts históricos en la computadora de la universidad.",
-    "entregable": ""
+    "entregable": "",
+    "id": "act-1793375662076",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+    ]
   },
   {
-    "id": "act-1793375691945",
     "fecha": "2026-10-27",
     "hora_inicio": "14:00",
     "hora_fin": "16:00",
     "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
-    "solicitantes": [
-      "Ing. Gustavo Ernesto Navas Ruilova Msc."
-    ],
     "estado": "completado",
     "descripcion": "Revisión de la VM en la que está alojada la página web del grupo.",
-    "entregable": ""
+    "entregable": "",
+    "id": "act-1793375691945",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+    ]
   },
   {
-    "id": "act-1793375781124",
     "fecha": "2026-10-29",
     "hora_inicio": "09:00",
     "hora_fin": "10:00",
     "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
-    "solicitantes": [
-      "Ing. Gustavo Ernesto Navas Ruilova Msc."
-    ],
     "estado": "completado",
     "descripcion": "Refactorización de la página web del grupo.",
-    "entregable": ""
+    "entregable": "",
+    "id": "act-1793375781124",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+    ]
   },
   {
-    "id": "act-1793375816231",
     "fecha": "2026-10-29",
     "hora_inicio": "10:00",
     "hora_fin": "11:00",
     "solicitante": "UPS",
-    "solicitantes": [
-      "UPS"
-    ],
     "estado": "completado",
     "descripcion": "Simulacro de sismo.",
-    "entregable": ""
+    "entregable": "",
+    "id": "act-1793375816231",
+    "solicitantes": [
+      "UPS"
+    ]
   },
   {
-    "id": "act-1793376051561",
     "fecha": "2026-10-29",
     "hora_inicio": "11:00",
     "hora_fin": "12:00",
     "solicitante": "Ing. Diego Fernando Vallejo Huanga Msc.",
-    "solicitantes": [
-      "Ing. Diego Fernando Vallejo Huanga Msc."
-    ],
     "estado": "completado",
     "descripcion": "Reunión Virtual (Vía Zoom)",
-    "entregable": ""
+    "entregable": "",
+    "id": "act-1793376051561",
+    "solicitantes": [
+      "Ing. Diego Fernando Vallejo Huanga Msc."
+    ]
   },
   {
-    "id": "act-1793376081458",
     "fecha": "2026-10-29",
     "hora_inicio": "12:00",
     "hora_fin": "13:00",
     "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
-    "solicitantes": [
-      "Ing. Gustavo Ernesto Navas Ruilova Msc."
-    ],
     "estado": "completado",
     "descripcion": "Refactorización de la página web del grupo.",
-    "entregable": ""
+    "entregable": "",
+    "id": "act-1793376081458",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+    ]
   },
   {
-    "id": "act-1793376122635",
     "fecha": "2026-10-29",
     "hora_inicio": "14:00",
     "hora_fin": "17:00",
     "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
-    "solicitantes": [
-      "Ing. Gustavo Ernesto Navas Ruilova Msc."
-    ],
     "estado": "completado",
     "descripcion": "Refactorización y despliegue de la página web del grupo.",
-    "entregable": ""
+    "entregable": "",
+    "id": "act-1793376122635",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+    ]
   },
   {
-    "id": "act-1793376202232",
     "fecha": "2026-10-29",
     "hora_inicio": "17:00",
     "hora_fin": "18:00",
     "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
-    "solicitantes": [
-      "Ing. Gustavo Ernesto Navas Ruilova Msc."
-    ],
     "estado": "completado",
     "descripcion": "Debuggeo y revisión del CI de la página web del grupo en GitHub.",
-    "entregable": ""
+    "entregable": "",
+    "id": "act-1793376202232",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+    ]
   },
   {
-    "id": "act-1793376244432",
     "fecha": "2026-10-30",
     "hora_inicio": "09:00",
     "hora_fin": "09:30",
     "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
-    "solicitantes": [
-      "Ing. Gustavo Ernesto Navas Ruilova Msc."
-    ],
     "estado": "completado",
     "descripcion": "Revisión del CI de la página web del grupo en GitHub.",
-    "entregable": ""
+    "entregable": "",
+    "id": "act-1793376244432",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+    ]
   },
   {
-    "id": "act-1793376270258",
     "fecha": "2026-10-30",
     "hora_inicio": "09:30",
     "hora_fin": "10:00",
     "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
-    "solicitantes": [
-      "Ing. Gustavo Ernesto Navas Ruilova Msc."
-    ],
     "estado": "completado",
     "descripcion": "Reunión virtual (Vía Zoom)",
-    "entregable": ""
+    "entregable": "",
+    "id": "act-1793376270258",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+    ]
   },
   {
-    "id": "act-1793376344884",
     "fecha": "2026-10-30",
     "hora_inicio": "10:00",
     "hora_fin": "11:00",
     "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
-    "solicitantes": [
-      "Ing. Gustavo Ernesto Navas Ruilova Msc."
-    ],
     "estado": "completado",
     "descripcion": "Implementación de cambios dentro de la página web del grupo y redespliegue.",
-    "entregable": "Página desplegada: ideiageoca.org"
+    "entregable": "Página desplegada: ideiageoca.org",
+    "id": "act-1793376344884",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+    ]
   },
   {
-    "id": "act-1793376580253",
     "fecha": "2026-10-30",
     "hora_inicio": "11:00",
     "hora_fin": "13:00",
     "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
-    "solicitantes": [
-      "Ing. Gustavo Ernesto Navas Ruilova Msc."
-    ],
     "estado": "completado",
     "descripcion": "Implementación de cambios dentro de AIQuest.",
-    "entregable": ""
+    "entregable": "",
+    "id": "act-1793376580253",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+    ]
   },
   {
-    "id": "act-1793376602552",
     "fecha": "2026-10-30",
     "hora_inicio": "14:00",
     "hora_fin": "18:00",
-    "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+    "estado": "completado",
+    "descripcion": "Implementación y revisión de cambios dentro de la página web del grupo en producción.",
+    "entregable": "",
     "solicitantes": [
-      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+      "Ing. Diego Fernando Vallejo Huanga Msc.",
+      "Ing. Rodrigo Efrain Tufiño Cárdenas Msc.",
+      "Julio Ricardo Proaño Orellana, Ph.D."
     ],
-    "estado": "pendiente",
-    "descripcion": "Implementación y revisión de cambios dentro de AIQuest en producción.",
-    "entregable": ""
+    "solicitante": "Ing. Diego Fernando Vallejo Huanga Msc., Ing. Rodrigo Efrain Tufiño Cárdenas Msc., Julio Ricardo Proaño Orellana, Ph.D.",
+    "id": "act-1793376602552"
   },
   {
+    "fecha": "2026-10-22",
+    "hora_inicio": "09:00",
+    "hora_fin": "13:00",
+    "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+    "estado": "completado",
+    "descripcion": "Implementación de cambios en AIQuest.",
+    "entregable": "",
     "id": "act-1793376780843",
-    "fecha": "2026-10-22",
-    "hora_inicio": "09:00",
-    "hora_fin": "13:00",
-    "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
     "solicitantes": [
       "Ing. Gustavo Ernesto Navas Ruilova Msc."
-    ],
-    "estado": "completado",
-    "descripcion": "Implementación de cambios en AIQuest.",
-    "entregable": ""
+    ]
   },
   {
+    "fecha": "2026-10-22",
+    "hora_inicio": "14:00",
+    "hora_fin": "18:00",
+    "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+    "estado": "completado",
+    "descripcion": "Implementación de cambios en AIQuest.",
+    "entregable": "",
     "id": "act-1793376799167",
-    "fecha": "2026-10-22",
-    "hora_inicio": "14:00",
-    "hora_fin": "18:00",
-    "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
     "solicitantes": [
       "Ing. Gustavo Ernesto Navas Ruilova Msc."
-    ],
-    "estado": "completado",
-    "descripcion": "Implementación de cambios en AIQuest.",
-    "entregable": ""
+    ]
   },
   {
-    "id": "act-1793376829328",
     "fecha": "2026-10-23",
     "hora_inicio": "09:00",
     "hora_fin": "13:00",
     "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
-    "solicitantes": [
-      "Ing. Gustavo Ernesto Navas Ruilova Msc."
-    ],
     "estado": "completado",
     "descripcion": "Implementación de cambios en AIQuest.",
-    "entregable": ""
+    "entregable": "",
+    "id": "act-1793376829328",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+    ]
   },
   {
-    "id": "act-1793376854017",
     "fecha": "2026-10-23",
     "hora_inicio": "14:00",
     "hora_fin": "18:00",
     "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+    "estado": "completado",
+    "descripcion": "Implementación de cambios en AIQuest.",
+    "entregable": "",
+    "id": "act-1793376854017",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+    ]
+  },
+  {
+    "fecha": "2026-10-30",
+    "hora_inicio": "14:00",
+    "hora_fin": "18:00",
+    "estado": "pendiente",
+    "descripcion": "Implementación y revisión de cambios dentro de AIQuest en producción.\nQueda pendiente, los cambios en la web son más importantes.",
+    "entregable": "",
     "solicitantes": [
       "Ing. Gustavo Ernesto Navas Ruilova Msc."
     ],
+    "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+    "id": "act-1793389531429"
+  },
+  {
+    "fecha": "2026-11-03",
+    "hora_inicio": "11:00",
+    "hora_fin": "16:00",
+    "estado": "completado",
+    "descripcion": "FERIADO NACIONAL",
+    "entregable": "",
+    "solicitantes": [],
+    "solicitante": "",
+    "id": "act-1793880961569"
+  },
+  {
+    "fecha": "2026-11-05",
+    "hora_inicio": "09:00",
+    "hora_fin": "09:30",
+    "estado": "completado",
+    "descripcion": "Ayuda  para gestionar prueba de estática.",
+    "entregable": "",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+    ],
+    "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+    "id": "act-1793891322952"
+  },
+  {
+    "fecha": "2026-11-05",
+    "hora_inicio": "09:30",
+    "hora_fin": "11:10",
+    "estado": "completado",
+    "descripcion": "Implementación de cambios en AIQuest, inicio de configuración CD desde GitHub y pruebas en producción.",
+    "entregable": "",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+    ],
+    "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+    "id": "act-1793891426698"
+  },
+  {
+    "fecha": "2026-11-05",
+    "hora_inicio": "14:00",
+    "hora_fin": "18:00",
+    "estado": "completado",
+    "descripcion": "Implementación de cambios en AIQuest y la página web del grupo en producción.",
+    "entregable": "Página desplegada: aiquest.ideiageoca.org ; ideiageoca.org",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+      "Ing. Diego Fernando Vallejo Huanga Msc."
+    ],
+    "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc., Ing. Diego Fernando Vallejo Huanga Msc.",
+    "id": "act-1793891677251"
+  },
+  {
+    "fecha": "2026-11-05",
+    "hora_inicio": "11:10",
+    "hora_fin": "12:30",
+    "estado": "completado",
+    "descripcion": "Reunión presencial.",
+    "entregable": "",
+    "solicitantes": [
+      "Ing. Diego Fernando Vallejo Huanga Msc."
+    ],
+    "solicitante": "Ing. Diego Fernando Vallejo Huanga Msc.",
+    "id": "act-1793905550323"
+  },
+  {
+    "fecha": "2026-11-05",
+    "hora_inicio": "12:30",
+    "hora_fin": "13:00",
     "estado": "completado",
     "descripcion": "Implementación de cambios en AIQuest.",
-    "entregable": ""
+    "entregable": "",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+    ],
+    "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+    "id": "act-1793905597700"
+  },
+  {
+    "fecha": "2026-11-06",
+    "hora_inicio": "09:30",
+    "hora_fin": "10:30",
+    "estado": "completado",
+    "descripcion": "Reunión presencial.",
+    "entregable": "",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+    ],
+    "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+    "id": "act-1793982406594"
+  },
+  {
+    "fecha": "2026-11-06",
+    "hora_inicio": "09:00",
+    "hora_fin": "09:30",
+    "estado": "completado",
+    "descripcion": "Desarrollo de plan de acción para cambios en AIQuest.",
+    "entregable": "",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+    ],
+    "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+    "id": "act-1793982436253"
+  },
+  {
+    "fecha": "2026-11-06",
+    "hora_inicio": "10:30",
+    "hora_fin": "13:00",
+    "estado": "completado",
+    "descripcion": "Implementación de cambios en AIQuest.",
+    "entregable": "",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+    ],
+    "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+    "id": "act-1793982521768"
+  },
+  {
+    "fecha": "2026-11-06",
+    "hora_inicio": "14:00",
+    "hora_fin": "18:00",
+    "estado": "completado",
+    "descripcion": "Resolución de conflictos respecto a papers y publicaciones antiguas.",
+    "entregable": "",
+    "solicitantes": [
+      "Ing. Diego Fernando Vallejo Huanga Msc."
+    ],
+    "solicitante": "Ing. Diego Fernando Vallejo Huanga Msc.",
+    "id": "act-1793985534864"
+  },
+  {
+    "fecha": "2026-11-10",
+    "hora_inicio": "11:00",
+    "hora_fin": "11:30",
+    "estado": "completado",
+    "descripcion": "Reunión presencial.",
+    "entregable": "",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+    ],
+    "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+    "id": "act-1794493903574"
+  },
+  {
+    "fecha": "2026-11-10",
+    "hora_inicio": "11:30",
+    "hora_fin": "12:30",
+    "estado": "completado",
+    "descripcion": "Implementación de cambios en AIQuest.",
+    "entregable": "",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+    ],
+    "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+    "id": "act-1794493943228"
+  },
+  {
+    "fecha": "2026-11-10",
+    "hora_inicio": "14:00",
+    "hora_fin": "15:00",
+    "estado": "completado",
+    "descripcion": "Corrección de material para disertación de paper.",
+    "entregable": "",
+    "solicitantes": [
+      "Ing. Diego Fernando Vallejo Huanga Msc."
+    ],
+    "solicitante": "Ing. Diego Fernando Vallejo Huanga Msc.",
+    "id": "act-1794494054707"
+  },
+  {
+    "fecha": "2026-11-10",
+    "hora_inicio": "12:30",
+    "hora_fin": "13:00",
+    "estado": "completado",
+    "descripcion": "Corrección de material para disertación de paper.",
+    "entregable": "",
+    "solicitantes": [
+      "Ing. Diego Fernando Vallejo Huanga Msc."
+    ],
+    "solicitante": "Ing. Diego Fernando Vallejo Huanga Msc.",
+    "id": "act-1794494071611"
+  },
+  {
+    "fecha": "2026-11-10",
+    "hora_inicio": "15:00",
+    "hora_fin": "16:00",
+    "estado": "completado",
+    "descripcion": "Solución de conflicto de versiones en la web del grupo y AIQuest.",
+    "entregable": "",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+    ],
+    "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+    "id": "act-1794494119922"
+  },
+  {
+    "fecha": "2026-11-12",
+    "hora_inicio": "09:00",
+    "hora_fin": "09:30",
+    "estado": "completado",
+    "descripcion": "Ayuda  para gestionar prueba de estática.",
+    "entregable": "",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+    ],
+    "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+    "id": "act-1794494153475"
+  },
+  {
+    "fecha": "2026-11-12",
+    "hora_inicio": "09:30",
+    "hora_fin": "12:30",
+    "estado": "completado",
+    "descripcion": "Testeo en local de cambios en AIQuest.",
+    "entregable": "",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+    ],
+    "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+    "id": "act-1794494362836"
+  },
+  {
+    "fecha": "2026-11-12",
+    "hora_inicio": "12:30",
+    "hora_fin": "13:00",
+    "estado": "completado",
+    "descripcion": "Despliegue de cambios en nube de la web del grupo y AIQuest.",
+    "entregable": "",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+    ],
+    "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+    "id": "act-1794494492575"
+  },
+  {
+    "fecha": "2026-11-12",
+    "hora_inicio": "14:00",
+    "hora_fin": "15:00",
+    "estado": "completado",
+    "descripcion": "Revisión de documentos.",
+    "entregable": "",
+    "solicitantes": [
+      "Ing. Diego Fernando Vallejo Huanga Msc."
+    ],
+    "solicitante": "Ing. Diego Fernando Vallejo Huanga Msc.",
+    "id": "act-1794494735407"
+  },
+  {
+    "fecha": "2026-11-12",
+    "hora_inicio": "15:00",
+    "hora_fin": "18:00",
+    "estado": "completado",
+    "descripcion": "Debuggeo e implementación de cambios en AIQuest.",
+    "entregable": "",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+    ],
+    "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+    "id": "act-1794513615622"
+  },
+  {
+    "fecha": "2026-11-13",
+    "hora_inicio": "09:00",
+    "hora_fin": "18:00",
+    "estado": "completado",
+    "descripcion": "PERMISO (8 HORAS, RESTANTES 64)",
+    "entregable": "",
+    "solicitantes": [],
+    "solicitante": "",
+    "id": "act-1795537076469"
+  },
+  {
+    "fecha": "2026-11-20",
+    "hora_inicio": "09:00",
+    "hora_fin": "18:00",
+    "estado": "completado",
+    "descripcion": "FERIADO NACIONAL",
+    "entregable": "",
+    "solicitantes": [],
+    "solicitante": "",
+    "id": "act-1795537097964"
+  },
+  {
+    "fecha": "2026-11-19",
+    "hora_inicio": "09:00",
+    "hora_fin": "18:00",
+    "estado": "completado",
+    "descripcion": "PERMISO (8 HORAS, RESTANTES 56)",
+    "entregable": "",
+    "solicitantes": [],
+    "solicitante": "",
+    "id": "act-1795537279538"
+  },
+  {
+    "fecha": "2026-11-17",
+    "hora_inicio": "14:00",
+    "hora_fin": "16:00",
+    "estado": "completado",
+    "descripcion": "Modificación de Lumen Research para hacer pruebas locales.",
+    "entregable": "",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+    ],
+    "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+    "id": "act-1795537351896"
+  },
+  {
+    "fecha": "2026-11-17",
+    "hora_inicio": "11:00",
+    "hora_fin": "12:00",
+    "estado": "completado",
+    "descripcion": "Modificación de Lumen Research para hacer pruebas locales.",
+    "entregable": "",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+    ],
+    "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+    "id": "act-1795537411666"
+  },
+  {
+    "fecha": "2026-11-17",
+    "hora_inicio": "12:10",
+    "hora_fin": "12:30",
+    "estado": "completado",
+    "descripcion": "Reunión presencial.",
+    "entregable": "",
+    "solicitantes": [
+      "Ing. Diego Fernando Vallejo Huanga Msc."
+    ],
+    "solicitante": "Ing. Diego Fernando Vallejo Huanga Msc.",
+    "id": "act-1795537459694"
+  },
+  {
+    "fecha": "2026-11-17",
+    "hora_inicio": "12:00",
+    "hora_fin": "12:10",
+    "estado": "completado",
+    "descripcion": "Entrega de documentos en GTH Campus Sur.",
+    "entregable": "",
+    "solicitantes": [
+      "UPS"
+    ],
+    "solicitante": "UPS",
+    "id": "act-1795537490534"
+  },
+  {
+    "fecha": "2026-11-17",
+    "hora_inicio": "12:30",
+    "hora_fin": "13:00",
+    "estado": "completado",
+    "descripcion": "Modificación de Lumen Research para hacer pruebas locales.",
+    "entregable": "",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+    ],
+    "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+    "id": "act-1795537531500"
+  },
+  {
+    "fecha": "2026-11-24",
+    "hora_inicio": "11:00",
+    "hora_fin": "11:10",
+    "estado": "completado",
+    "descripcion": "Reunión presencial.",
+    "entregable": "",
+    "solicitantes": [
+      "Ing. Gustavo Ernesto Navas Ruilova Msc."
+    ],
+    "solicitante": "Ing. Gustavo Ernesto Navas Ruilova Msc.",
+    "id": "act-1795537558860"
+  },
+  {
+    "fecha": "2026-11-24",
+    "hora_inicio": "11:10",
+    "hora_fin": "11:30",
+    "estado": "completado",
+    "descripcion": "Preparación de Lumen Research para prueba piloto, con documentos reales.",
+    "entregable": "",
+    "solicitantes": [],
+    "solicitante": "",
+    "id": "act-1795537587402"
   }
 ];

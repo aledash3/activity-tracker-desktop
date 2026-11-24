@@ -30,7 +30,6 @@ export default function AppearanceModal({
   return (
     <div
       className="modal-backdrop"
-      onClick={(e) => e.target === e.currentTarget && onCerrar()}
       role="dialog"
       aria-modal="true"
       aria-labelledby="appearance-modal-title"

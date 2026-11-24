@@ -13,6 +13,7 @@ import {
 import {
   hoyISO,
   lunesDe,
+  sumarDias,
   formatearFechaCorta,
   formatearFechaTexto,
   formatearHoras,
@@ -162,7 +163,6 @@ export default function ReportsModal({
   return (
     <div
       className="modal-backdrop"
-      onClick={(e) => e.target === e.currentTarget && onCerrar()}
       role="dialog"
       aria-modal="true"
       aria-labelledby="reports-modal-title"
